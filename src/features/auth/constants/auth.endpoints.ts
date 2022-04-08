@@ -5,4 +5,5 @@ export enum AuthEndpointsEnum {
   REFRESH_TOKEN = "refresh-token",
   USERS = "users",
   REGISTER = "auth/register",
+  AUTO_LOGIN = "auth/auto-login",
 }

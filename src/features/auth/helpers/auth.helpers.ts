@@ -9,7 +9,6 @@ import { TokenDef, ApiResponseDef, InitialStateDef } from "../types/auth.types";
  */
 export const getTokens = () => {
   const cookieToken: TokenDef | undefined = cookie.load(AUTH_ACCESS_TOKEN);
-console.log(cookieToken)
   return {
     accessToken: cookieToken,
     refreshToken: cookieToken?.refreshToken,
@@ -21,7 +20,7 @@ console.log(cookieToken)
  * Save token and refresh token to session cookie,
  * Default value used for demo API
  */
-export const saveTokens = ({ expiresIn = "3600", token }: ApiResponseDef) => {
+export const saveTokens = ({ expiresIn = "86400", token }: ApiResponseDef) => {
   const cookieToken: TokenDef = {
     accessToken: token,
     expiresAt: moment().add(expiresIn, "seconds").toDate(),

@@ -1,13 +1,25 @@
 import BlankLayout from "@app/components/layouts/BlankLayout/BlackLayout";
 import NotFound from "@app/components/layouts/NotFound/NotFound";
-import { useAppSelector } from "@app/redux/store";
+import { autoLoginUser } from "@app/features/auth/auth";
+import { useAppDispatch, useAppSelector } from "@app/redux/store";
 import { RouteItemDef, RouteWrapperConfigDef } from "@app/types/routes.types";
-import { ComponentType, ElementType, memo } from "react";
-import { Routes as Switch, Route, Navigate } from "react-router-dom";
+import { ComponentType, ElementType, memo, useEffect } from "react";
+import { Routes as Switch, Route, useNavigate,Navigate } from "react-router-dom";
 import { PRIVATE_LIST, PUBLIC_LIST } from "./routes.config";
 
 const DefaultLayout = BlankLayout;
 const Routes = () => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  useEffect(() => {
+    const autoLoginPromise = async () => {
+      const response = await dispatch(autoLoginUser());
+      if (autoLoginUser.fulfilled.match(response)) {
+        navigate('/')
+      }
+    };
+    autoLoginPromise();
+  }, []);
   const { isAuthenticated } = useAppSelector((state) => ({
     isAuthenticated: state.auth?.isAuthenticated,
   }));
@@ -47,7 +59,9 @@ const Routes = () => {
     <Switch>
       <Route path="/" element={<Navigate replace to="/home" />} />
 
-      {PRIVATE_LIST.map((route) => routeWrapper(route,{isProtectedRoute:true}))}
+      {PRIVATE_LIST.map((route) =>
+        routeWrapper(route, { isProtectedRoute: true })
+      )}
       {PUBLIC_LIST.map((route) => routeWrapper(route))}
       <Route
         path="*"

@@ -9,12 +9,13 @@ import {
 import { useAppDispatch } from "@app/redux/store";
 import { useNavigate } from "react-router";
 import FormInput from "@app/components/atoms/FormInput/FormInput";
+import { register } from "../../redux/auth.slice";
 
 const LoginScreen = () => {
   const [isLoading, setIsLoading] = useState<Boolean>(false);
-  const [isErr, setIsErr] = useState<Boolean>(false);
+  const [isErrLogin, setIsErrLogin] = useState<Boolean>(false);
   const [isLogin, setIsLogin] = useState<Boolean>(true);
-  const { handleSubmit, setError, formState, control } = useForm<
+  const { handleSubmit, formState, control } = useForm<
     RegisterRequestDef | LoginRequestDef
   >({
     mode: "onChange",
@@ -25,31 +26,38 @@ const LoginScreen = () => {
     data
   ) => {
     setIsLoading(true);
-    const response = await dispatch(login(data));
-    if (login.fulfilled.match(response)) {
-      setIsLoading(false);
-      navigate("/home");
+    if (isLogin) {
+      const response = await dispatch(login(data as LoginRequestDef));
+      if (login.fulfilled.match(response)) {
+        setIsLoading(false);
+        navigate("/home");
+      } else {
+        setIsErrLogin(true);
+        setIsLoading(false);
+      }
     } else {
-      setIsErr(true);
-      setIsLoading(false);
-      setError("username", {
-        types: {
-          required: "required",
-          maxLength: "Max lengh",
-        },
-      });
+      const response = await dispatch(register(data as RegisterRequestDef));
+      if (register.fulfilled.match(response)) {
+        setIsLoading(false);
+        navigate("/home");
+      } else {
+        setIsErrLogin(true);
+        setIsLoading(false);
+      }
     }
   };
-  const onFocusInput= (e: React.FocusEvent<HTMLInputElement>) => {
-    setIsErr(false);
-  }
+  const onFocusInput = (e: React.FocusEvent<HTMLInputElement>) => {
+    setIsErrLogin(false);
+  };
   return (
     <div className="bg-dark min-h-[100vh] min-w-full flex justify-center items-center">
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="bg-dark-second px-6 w-[405px] rounded-lg"
       >
-        <p className="text-left font-28 mt-6 text-white text-2xl">{isLogin?'Login':'Sign up'}</p>
+        <p className="text-left font-28 mt-6 text-white text-2xl">
+          {isLogin ? "Login" : "Sign up"}
+        </p>
         <p className="my-5 bg-[#393C49] w-full h-[1px]"></p>
         {!isLogin && (
           <>
@@ -127,8 +135,8 @@ const LoginScreen = () => {
                 rules={{
                   required: "Tài khoản không được để trống.",
                   maxLength: {
-                    value: 20,
-                    message: "Tài khoản không được vượt quá 20 ký tự.",
+                    value: 100,
+                    message: "Email không được vượt quá 100 ký tự.",
                   },
                 }}
                 render={({
@@ -212,7 +220,7 @@ const LoginScreen = () => {
             </div>
           </>
         )}
-        {isErr && (
+        {isErrLogin && (
           <p className="text-xs text-red-600">Sai tài khoản hoặc mật khẩu.</p>
         )}
         <p className="my-5 bg-[#393C49] w-full h-[1px]"></p>
@@ -224,13 +232,18 @@ const LoginScreen = () => {
           type="submit"
         >
           {isLoading && <LoadingSpinner size={20} />}
-          <span className={isLoading ? "ml-1" : ""}>Sign in</span>
+          <span className={isLoading ? "ml-1" : ""}>
+            {!isLogin ? "Sign up" : "Sign in"}
+          </span>
         </button>
         <p
           className="text-primary underline text-center mt-4 mb-5 cursor-pointer"
-          onClick={() => setIsLogin(!isLogin)}
+          onClick={() => {
+            setIsLogin(!isLogin);
+            setIsErrLogin(false);
+          }}
         >
-          Sign up
+          {isLogin ? "Sign up" : "Sign in"}
         </p>
       </form>
     </div>

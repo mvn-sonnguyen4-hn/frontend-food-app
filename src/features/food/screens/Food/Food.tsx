@@ -12,7 +12,7 @@ const Food = ({ name, price, url_img, avaiable }: IFoodProps) => {
   const [isHover, setIsHover] = useState(false);
   const addOrder = () => {};
   return (
-    <div>
+    <div className="mt-4">
       <div
         className={cx(
           "bg-dark-3 rounded-2xl w-[12rem] h-[14rem] text-sm text-center cursor-pointer",

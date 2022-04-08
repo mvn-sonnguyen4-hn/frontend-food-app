@@ -34,7 +34,7 @@ const Home = () => {
       <p className="mb-6 mt-1">Tuesday, 2 Feb 2021</p>
       <Menu />
       <p className="mb-14 mt-6 text-xl font-bold">Choose Dishes</p>
-      <div>{showListFood()}</div>
+      <div className="flex gap-10 flex-wrap">{showListFood()}</div>
     </div>
   );
 };
