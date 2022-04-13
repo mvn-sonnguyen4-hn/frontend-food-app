@@ -1,4 +1,4 @@
-import { memo, ReactNode } from "react";
+import React, { memo, ReactNode } from "react";
 import DashboardImage from "@app/assets/images/dashboard.png";
 import styles from "./Navbar.module.scss";
 import { NavLink } from "react-router-dom";
@@ -42,4 +42,4 @@ const Navbar = memo(({ children }: NavbarProps) => {
   );
 });
 
-export default Navbar;
+export default React.memo(Navbar);

@@ -1,9 +1,8 @@
-.loader{
+@import "@app/scss/variables";
+.loader {
   border-radius: 50%;
   width: 20px;
   height: 20px;
-}
-.loader {
   font-size: 3px;
   position: relative;
   border-top: 1.1em solid #e0f2f1;
@@ -15,6 +14,11 @@
   transform: translateZ(0);
   -webkit-animation: load8 1.1s infinite linear;
   animation: load8 1.1s infinite linear;
+}
+.loader__primary {
+  border-top: 1.1em solid $primary-color !important;
+  border-right: 1.1em solid $primary-color !important;
+  border-bottom: 1.1em solid $primary-color !important;
 }
 @-webkit-keyframes load8 {
   0% {

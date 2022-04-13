@@ -5,12 +5,8 @@ export type FoodDef = {
   avaiable: number;
 };
 export type FoodResponse = {
-  data: [
-    {
-      name: string;
-      price: number;
-      url_img: string;
-      avaiable: number;
-    }
-  ];
+  data: FoodDef[];
+  limit: number;
+  page: number;
+  totalPage: number;
 };

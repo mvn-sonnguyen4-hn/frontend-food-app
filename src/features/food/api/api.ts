@@ -1,7 +1,20 @@
-import { FoodResponse } from '@app/features/food/food';
+import { FoodResponse } from "@app/features/food/food";
 import { AxiosResponse } from "axios";
-import {api} from "@app/api/api";
+import { api } from "@app/api/api";
 import { FoodndpointsEnum } from "../constants/food.endpoints";
 export const getListFood = (): Promise<AxiosResponse<FoodResponse>> => {
-    return api.get(FoodndpointsEnum.GET_LIST_FOOD);
-}
+  return api.get<FoodResponse>(FoodndpointsEnum.GET_LIST_FOOD);
+};
+
+export const getFoodByPaginationAndCategoryType = (
+  page: number,
+  type: string
+): Promise<AxiosResponse<FoodResponse>> => {
+  console.log(type);
+  return api.get<FoodResponse>(FoodndpointsEnum.GET_LIST_FOOD, {
+    params: {
+      page,
+      type,
+    },
+  });
+};
