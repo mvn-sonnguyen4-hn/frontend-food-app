@@ -42,7 +42,7 @@ function Food({
     <div className="mt-4">
       <div
         className={cx(
-          'bg-dark-3 rounded-2xl h-[14rem] text-sm text-center cursor-pointer',
+          'bg-dark-second rounded-2xl h-[14rem] text-sm text-center cursor-pointer',
           styles.item
         )}
         onMouseOver={() => setIsHover(true)}

@@ -9,10 +9,15 @@ export const getListFood = (): Promise<AxiosResponse<FoodResponse>> =>
 export const getFoodByPaginationAndCategoryType = (
   page: number,
   type: string
-): Promise<AxiosResponse<FoodResponse>> =>
-  api.get<FoodResponse>(FoodndpointsEnum.GET_LIST_FOOD, {
+): Promise<AxiosResponse<FoodResponse>> => {
+  if (!type) {
+    type = 'Hot dishes';
+  }
+  return api.get<FoodResponse>(FoodndpointsEnum.GET_LIST_FOOD, {
     params: {
       page,
-      type
+      type,
+      limit: 3
     }
   });
+};

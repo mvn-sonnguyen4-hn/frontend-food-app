@@ -5,16 +5,17 @@ import { Fragment, useState } from 'react';
 import {
   createOrder,
   changeAmountOrder,
-  changeNoteOrder
+  changeNoteOrder,
+  resetOrders
 } from '@app/features/orders/orders';
+import styles from './OrderSidebar.module.scss';
 import LoadingSpinner from '@app/components/atoms/LoadingSpinner/LoadingSpinner';
-import styles from './ListOrder.module.scss';
 
 interface IPropsListOrders {
-  closeModal: Function;
+  closeModalAndNotify: Function;
 }
 
-function ListOrders({ closeModal }: IPropsListOrders) {
+function OrderSidebar({ closeModalAndNotify }: IPropsListOrders) {
   const dispatch = useAppDispatch();
   const listOrders = useAppSelector(state => state.order.listOrder);
   const [isLoading, setIsLoading] = useState(false);
@@ -29,7 +30,10 @@ function ListOrders({ closeModal }: IPropsListOrders) {
     const result = await createOrder(data);
     if (result) {
       setIsLoading(false);
-      closeModal();
+      dispatch(resetOrders());
+      closeModalAndNotify(true);
+    } else {
+      closeModalAndNotify();
     }
   };
 
@@ -134,4 +138,4 @@ function ListOrders({ closeModal }: IPropsListOrders) {
   );
 }
 
-export default ListOrders;
+export default OrderSidebar;

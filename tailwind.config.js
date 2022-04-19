@@ -3,13 +3,13 @@ module.exports = {
   theme: {
     extend: {
       backgroundColor: {
-        primary: '#EA7C69',
+        primary: '#ea7c69',
         dark: '#252836',
-        'dark-second': '#1F1D2B',
-        'dark-3': '#1F1D2B',
+        'dark-second': '#1f1d2b',
       },
       colors: {
-        primary: '#EA7C69',
+        primary: '#ea7c69',
+        'red-main':'#9D0505'
       },
       gridTemplateColumns: {
         192: 'repeat(auto-fill, 12rem)',

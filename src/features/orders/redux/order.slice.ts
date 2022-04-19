@@ -49,12 +49,15 @@ const orderSlice = createSlice({
       }>
     ) {
       state.listOrder[action.payload.position].note = action.payload.note;
+    },
+    resetOrders(state) {
+      state.listOrder = [];
     }
   },
   extraReducers: () => {}
 });
 
-export const { addOrder, changeAmountOrder, changeNoteOrder } =
+export const { addOrder, changeAmountOrder, changeNoteOrder, resetOrders } =
   orderSlice.actions;
 
 export const orderReducer = orderSlice.reducer;
