@@ -1,16 +1,16 @@
-import LoadingSpinner from "@app/components/atoms/LoadingSpinner/LoadingSpinner";
-import CustomModal from "@app/components/atoms/Modal/CustomModal";
-import Menu from "@app/components/layouts/Menu/Menu";
+import LoadingSpinner from '@app/components/atoms/LoadingSpinner/LoadingSpinner';
+import CustomModal from '@app/components/atoms/Modal/CustomModal';
+import Menu from '@app/components/layouts/Menu/Menu';
 import {
   FoodResponse,
-  getFoodByPaginationAndCategoryType,
-} from "@app/features/food/food";
-import Food from "@app/features/food/screens/Food/Food";
-import { useEffect, useState } from "react";
-import { useSearchParams, useLocation } from "react-router-dom";
-import ListOrders from "@app/features/orders/screens/ListOrder/ListOrders";
-import Toastify from "@app/components/atoms/Toastify/Toastify";
-import { enumToastify } from "@app/types/atom.type";
+  getFoodByPaginationAndCategoryType
+} from '@app/features/food/food';
+import Food from '@app/features/food/screens/Food/Food';
+import { useEffect, useState } from 'react';
+import { useSearchParams, useLocation } from 'react-router-dom';
+import ListOrders from '@app/features/orders/screens/ListOrder/ListOrders';
+import Toastify from '@app/components/atoms/Toastify/Toastify';
+import { enumToastify } from '@app/types/atom.type';
 
 function Home() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -18,19 +18,19 @@ function Home() {
     data: [],
     totalPage: 0,
     page: 0,
-    limit: 0,
+    limit: 0
   });
   useEffect(() => {
     setIsLoading(true);
-    const page = searchParams.get("page") || 1;
-    const type = searchParams.get("type") || "Hot dishes";
+    const page = searchParams.get('page') || 1;
+    const type = searchParams.get('type') || 'Hot dishes';
     getFoodByPaginationAndCategoryType(Number(page), type)
-      .then((res) => {
+      .then(res => {
         setListFood({
           data: res.data.data,
           totalPage: res.data.totalPage,
           page: res.data.page,
-          limit: res.data.limit,
+          limit: res.data.limit
         });
         setIsLoading(false);
       })
@@ -63,12 +63,12 @@ function Home() {
       data: [],
       totalPage: 0,
       page: 0,
-      limit: 0,
+      limit: 0
     });
-    const page = searchParams.get("page") || 1;
-    const type = searchParams.get("type") || "";
+    const page = searchParams.get('page') || 1;
+    const type = searchParams.get('type') || '';
     getFoodByPaginationAndCategoryType(Number(page), type)
-      .then((res) => {
+      .then(res => {
         setIsLoading(false);
         setListFood(res.data);
       })
@@ -99,7 +99,7 @@ function Home() {
       </CustomModal>
       {isLoading && (
         <div className="flex justify-center">
-          {" "}
+          {' '}
           <LoadingSpinner size={40} primaryColor />
         </div>
       )}

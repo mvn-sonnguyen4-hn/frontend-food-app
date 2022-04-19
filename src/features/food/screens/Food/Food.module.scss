@@ -1,9 +1,9 @@
-@import "@app/scss/variables.scss";
+@import '@app/scss/variables.scss';
 .item {
   position: relative;
   &::before {
     position: absolute;
-    content: "";
+    content: '';
     background-color: black;
     opacity: 0;
     visibility: visible;

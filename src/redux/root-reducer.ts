@@ -1,7 +1,7 @@
-import { combineReducers } from "@reduxjs/toolkit";
+import { combineReducers } from '@reduxjs/toolkit';
 
-import { authReducer, AUTH_FEATURE_KEY } from "@app/features/auth/auth";
-import { orderReducer, ORDER_FEATURE_KEY } from "@app/features/orders/orders";
+import { authReducer, AUTH_FEATURE_KEY } from '@app/features/auth/auth';
+import { orderReducer, ORDER_FEATURE_KEY } from '@app/features/orders/orders';
 // import {
 //   permissionsReducer,
 //   PERMISSIONS_FEATURE_KEY,
@@ -15,7 +15,7 @@ const rootReducer = combineReducers({
   // [USERS_FEATURE_KEY]: usersReducer,
   // [PERMISSIONS_FEATURE_KEY]: permissionsReducer,
   [AUTH_FEATURE_KEY]: authReducer,
-  [ORDER_FEATURE_KEY]: orderReducer,
+  [ORDER_FEATURE_KEY]: orderReducer
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

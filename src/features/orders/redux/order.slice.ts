@@ -1,9 +1,9 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { InitialStateDef, OrderDef } from "../orders";
-import { ORDER_FEATURE_KEY } from "../constants/order.key";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { InitialStateDef, OrderDef } from '../orders';
+import { ORDER_FEATURE_KEY } from '../constants/order.key';
 
 const initialState: InitialStateDef = {
-  listOrder: [],
+  listOrder: []
 };
 
 // export const getAllOrders = createAsyncThunk(
@@ -22,7 +22,7 @@ const orderSlice = createSlice({
   reducers: {
     addOrder(state, action: PayloadAction<OrderDef>) {
       const index = state.listOrder.findIndex(
-        (order) => order.food?._id === action.payload.food?._id
+        order => order.food?._id === action.payload.food?._id
       );
       if (index === -1) {
         state.listOrder.push(action.payload);
@@ -49,9 +49,9 @@ const orderSlice = createSlice({
       }>
     ) {
       state.listOrder[action.payload.position].note = action.payload.note;
-    },
+    }
   },
-  extraReducers: () => {},
+  extraReducers: () => {}
 });
 
 export const { addOrder, changeAmountOrder, changeNoteOrder } =

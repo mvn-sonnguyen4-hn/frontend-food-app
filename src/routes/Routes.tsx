@@ -1,16 +1,16 @@
-import BlankLayout from "@app/components/layouts/BlankLayout/BlackLayout";
-import NotFound from "@app/components/layouts/NotFound/NotFound";
-import { autoLoginUser } from "@app/features/auth/auth";
-import { useAppDispatch, useAppSelector } from "@app/redux/store";
-import { RouteItemDef, RouteWrapperConfigDef } from "@app/types/routes.types";
-import { ComponentType, ElementType, memo, useEffect } from "react";
+import BlankLayout from '@app/components/layouts/BlankLayout/BlackLayout';
+import NotFound from '@app/components/layouts/NotFound/NotFound';
+import { autoLoginUser } from '@app/features/auth/auth';
+import { useAppDispatch, useAppSelector } from '@app/redux/store';
+import { RouteItemDef, RouteWrapperConfigDef } from '@app/types/routes.types';
+import { ComponentType, ElementType, memo, useEffect } from 'react';
 import {
   Routes as Switch,
   Route,
   useNavigate,
-  Navigate,
-} from "react-router-dom";
-import { PRIVATE_LIST, PUBLIC_LIST } from "./routes.config";
+  Navigate
+} from 'react-router-dom';
+import { PRIVATE_LIST, PUBLIC_LIST } from './routes.config';
 
 const DefaultLayout = BlankLayout;
 function Routes() {
@@ -20,13 +20,13 @@ function Routes() {
     const autoLoginPromise = async () => {
       const response = await dispatch(autoLoginUser());
       if (autoLoginUser.fulfilled.match(response)) {
-        navigate("/");
+        navigate('/');
       }
     };
     autoLoginPromise();
   }, []);
-  const { isAuthenticated } = useAppSelector((state) => ({
-    isAuthenticated: state.auth?.isAuthenticated,
+  const { isAuthenticated } = useAppSelector(state => ({
+    isAuthenticated: state.auth?.isAuthenticated
   }));
   const routeWrapper = (
     { id, path, layout, component }: RouteItemDef,
@@ -62,10 +62,10 @@ function Routes() {
     <Switch>
       <Route path="/" element={<Navigate replace to="/home" />} />
 
-      {PRIVATE_LIST.map((route) =>
+      {PRIVATE_LIST.map(route =>
         routeWrapper(route, { isProtectedRoute: true })
       )}
-      {PUBLIC_LIST.map((route) => routeWrapper(route))}
+      {PUBLIC_LIST.map(route => routeWrapper(route))}
       <Route
         path="*"
         element={() => (

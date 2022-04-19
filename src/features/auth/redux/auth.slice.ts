@@ -1,20 +1,20 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import { LoginRequestDef, AUTH_FEATURE_KEY } from "@app/features/auth/auth";
-import { RegisterRequestDef, InitialStateDef } from "../types/auth.types";
+import { LoginRequestDef, AUTH_FEATURE_KEY } from '@app/features/auth/auth';
+import { RegisterRequestDef, InitialStateDef } from '../types/auth.types';
 
-import { authLogin, authRegister, autoLogin } from "../api/auth.api";
+import { authLogin, authRegister, autoLogin } from '../api/auth.api';
 import {
   saveTokens,
   clearTokens,
-  authErrorHelper,
-} from "../helpers/auth.helpers";
+  authErrorHelper
+} from '../helpers/auth.helpers';
 
 const initialState: InitialStateDef = {
   user: null,
   isAuthenticated: false,
   error: false,
-  loading: false,
+  loading: false
 };
 
 export const login = createAsyncThunk(
@@ -58,13 +58,13 @@ const authSlice = createSlice({
       state.user = null;
       state.isAuthenticated = false;
       clearTokens();
-    },
+    }
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     /**
      * LOGIN
      */
-    builder.addCase(login.pending, (state) => {
+    builder.addCase(login.pending, state => {
       state.error = false;
       state.loading = true;
     });
@@ -77,7 +77,7 @@ const authSlice = createSlice({
         email,
         phonenumber,
         address,
-        role,
+        role
       } = action.payload.user;
       state.loading = false;
       state.isAuthenticated = true;
@@ -88,20 +88,20 @@ const authSlice = createSlice({
         email,
         phonenumber,
         address,
-        role,
+        role
       };
       if (token) {
         saveTokens({ token });
       }
     });
-    builder.addCase(login.rejected, (state) => {
+    builder.addCase(login.rejected, state => {
       authErrorHelper(state);
       clearTokens();
     });
     /**
      * REGISTER
      */
-    builder.addCase(register.pending, (state) => {
+    builder.addCase(register.pending, state => {
       state.error = false;
       state.loading = true;
     });
@@ -114,7 +114,7 @@ const authSlice = createSlice({
         email,
         phonenumber,
         address,
-        role,
+        role
       } = action.payload.user;
       state.loading = false;
       state.isAuthenticated = true;
@@ -125,20 +125,20 @@ const authSlice = createSlice({
         email,
         phonenumber,
         address,
-        role,
+        role
       };
       if (token) {
         saveTokens({ token });
       }
     });
-    builder.addCase(register.rejected, (state) => {
+    builder.addCase(register.rejected, state => {
       authErrorHelper(state);
       clearTokens();
     });
     /**
      * AUTO LOGIN
      */
-    builder.addCase(autoLoginUser.pending, (state) => {
+    builder.addCase(autoLoginUser.pending, state => {
       state.error = false;
       state.loading = true;
     });
@@ -151,7 +151,7 @@ const authSlice = createSlice({
         email,
         phonenumber,
         address,
-        role,
+        role
       } = action.payload.user;
       state.loading = false;
       state.isAuthenticated = true;
@@ -162,17 +162,17 @@ const authSlice = createSlice({
         email,
         phonenumber,
         address,
-        role,
+        role
       };
       if (token) {
         saveTokens({ token });
       }
     });
-    builder.addCase(autoLoginUser.rejected, (state) => {
+    builder.addCase(autoLoginUser.rejected, state => {
       authErrorHelper(state);
       clearTokens();
     });
-  },
+  }
 });
 
 export const { clearUser } = authSlice.actions;

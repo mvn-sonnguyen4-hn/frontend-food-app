@@ -1,14 +1,14 @@
-import FormInput from "@app/components/atoms/FormInput/FormInput";
-import { useAppDispatch, useAppSelector } from "@app/redux/store";
-import cx from "classnames";
-import { Fragment, useState } from "react";
+import FormInput from '@app/components/atoms/FormInput/FormInput';
+import { useAppDispatch, useAppSelector } from '@app/redux/store';
+import cx from 'classnames';
+import { Fragment, useState } from 'react';
 import {
   createOrder,
   changeAmountOrder,
-  changeNoteOrder,
-} from "@app/features/orders/orders";
-import LoadingSpinner from "@app/components/atoms/LoadingSpinner/LoadingSpinner";
-import styles from "./ListOrder.module.scss";
+  changeNoteOrder
+} from '@app/features/orders/orders';
+import LoadingSpinner from '@app/components/atoms/LoadingSpinner/LoadingSpinner';
+import styles from './ListOrder.module.scss';
 
 interface IPropsListOrders {
   closeModal: Function;
@@ -16,15 +16,15 @@ interface IPropsListOrders {
 
 function ListOrders({ closeModal }: IPropsListOrders) {
   const dispatch = useAppDispatch();
-  const listOrders = useAppSelector((state) => state.order.listOrder);
+  const listOrders = useAppSelector(state => state.order.listOrder);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleCreateOrders = async () => {
     setIsLoading(true);
-    const data = listOrders.map((order) => ({
+    const data = listOrders.map(order => ({
       food: order.food,
       amount: order.amount,
-      note: order.note,
+      note: order.note
     }));
     const result = await createOrder(data);
     if (result) {
@@ -40,7 +40,7 @@ function ListOrders({ closeModal }: IPropsListOrders) {
     dispatch(
       changeAmountOrder({
         amount: Number(e.currentTarget.value),
-        position: index,
+        position: index
       })
     );
   };
@@ -75,7 +75,7 @@ function ListOrders({ closeModal }: IPropsListOrders) {
                 <FormInput
                   type="number"
                   value={amount || 1}
-                  onChange={(e) => changeAmount(e, index)}
+                  onChange={e => changeAmount(e, index)}
                 />
               </div>
             </td>
@@ -86,12 +86,12 @@ function ListOrders({ closeModal }: IPropsListOrders) {
           <tr>
             <td colSpan={2} className="pt-2">
               <FormInput
-                value={note ?? ""}
-                onChange={(e) => changeNote(e, index)}
+                value={note ?? ''}
+                onChange={e => changeNote(e, index)}
               />
             </td>
             <td className="flex-center pl-4 pt-2">
-              <div className={cx("flex-center", styles.delete)}>
+              <div className={cx('flex-center', styles.delete)}>
                 <span className="material-icons-outlined">delete</span>
               </div>
             </td>

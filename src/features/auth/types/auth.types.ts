@@ -1,4 +1,4 @@
-import { RoleDef } from "@app/types/role.type";
+import { RoleDef } from '@app/types/role.type';
 
 export type TokenDef = {
   accessToken?: string;

@@ -1,4 +1,4 @@
-import { ComponentType, ReactNode } from "react";
+import { ComponentType, ReactNode } from 'react';
 
 export type RouteGroupDef = {
   id: string;

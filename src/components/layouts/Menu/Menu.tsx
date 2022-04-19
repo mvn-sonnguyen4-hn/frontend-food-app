@@ -1,22 +1,22 @@
-import cx from "classnames";
-import { useLocation, useNavigate } from "react-router";
-import { useSearchParams } from "react-router-dom";
-import React, { useEffect, useState } from "react";
-import { CategoryDef } from "@app/features/category/category";
-import { getAllCategories } from "@app/features/category/api/category.api";
-import styles from "./Menu.module.scss";
+import cx from 'classnames';
+import { useLocation, useNavigate } from 'react-router';
+import { useSearchParams } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { CategoryDef } from '@app/features/category/category';
+import { getAllCategories } from '@app/features/category/api/category.api';
+import styles from './Menu.module.scss';
 
 function Menu() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const param = searchParams.get("type");
+  const param = searchParams.get('type');
   const location = useLocation();
   const [listCategories, setListCategories] = useState<CategoryDef[]>([]);
   const changeCategory = (type: string) => {
     navigate(`${location.pathname}?type=${type}`);
   };
   useEffect(() => {
-    getAllCategories().then((res) => {
+    getAllCategories().then(res => {
       setListCategories(res);
     });
   }, []);
@@ -29,7 +29,7 @@ function Menu() {
             key={e.name}
             className={cx(
               styles.menuItem,
-              e.name === param || (index === 0 && !param) ? styles.active : ""
+              e.name === param || (index === 0 && !param) ? styles.active : ''
             )}
             onClick={() => changeCategory(e.name)}
           >

@@ -1,15 +1,15 @@
-import LoadingSpinner from "@app/components/atoms/LoadingSpinner/LoadingSpinner";
-import { useState } from "react";
-import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import LoadingSpinner from '@app/components/atoms/LoadingSpinner/LoadingSpinner';
+import { useState } from 'react';
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import {
   login,
   LoginRequestDef,
-  RegisterRequestDef,
-} from "@app/features/auth/auth";
-import { useAppDispatch } from "@app/redux/store";
-import { useNavigate } from "react-router";
-import FormInput from "@app/components/atoms/FormInput/FormInput";
-import { register } from "../../redux/auth.slice";
+  RegisterRequestDef
+} from '@app/features/auth/auth';
+import { useAppDispatch } from '@app/redux/store';
+import { useNavigate } from 'react-router';
+import FormInput from '@app/components/atoms/FormInput/FormInput';
+import { register } from '../../redux/auth.slice';
 
 function LoginScreen() {
   const [isLoading, setIsLoading] = useState<Boolean>(false);
@@ -18,19 +18,19 @@ function LoginScreen() {
   const { handleSubmit, formState, control } = useForm<
     RegisterRequestDef | LoginRequestDef
   >({
-    mode: "onChange",
+    mode: 'onChange'
   });
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const onSubmit: SubmitHandler<RegisterRequestDef | LoginRequestDef> = async (
-    data
-  ) => {
+  const onSubmit: SubmitHandler<
+    RegisterRequestDef | LoginRequestDef
+  > = async data => {
     setIsLoading(true);
     if (isLogin) {
       const response = await dispatch(login(data as LoginRequestDef));
       if (login.fulfilled.match(response)) {
         setIsLoading(false);
-        navigate("/home");
+        navigate('/home');
       } else {
         setIsErrLogin(true);
         setIsLoading(false);
@@ -39,7 +39,7 @@ function LoginScreen() {
       const response = await dispatch(register(data as RegisterRequestDef));
       if (register.fulfilled.match(response)) {
         setIsLoading(false);
-        navigate("/home");
+        navigate('/home');
       } else {
         setIsErrLogin(true);
         setIsLoading(false);
@@ -56,7 +56,7 @@ function LoginScreen() {
         className="bg-dark-second px-6 w-[405px] rounded-lg"
       >
         <p className="text-left font-28 mt-6 text-white text-2xl">
-          {isLogin ? "Login" : "Sign up"}
+          {isLogin ? 'Login' : 'Sign up'}
         </p>
         <p className="my-5 bg-[#393C49] w-full h-[1px]" />
         {!isLogin && (
@@ -67,11 +67,11 @@ function LoginScreen() {
                 control={control}
                 name="first_name"
                 rules={{
-                  required: "Họ không được để trống.",
+                  required: 'Họ không được để trống.'
                 }}
                 render={({
                   field: { onChange, name },
-                  fieldState: { error },
+                  fieldState: { error }
                 }) => (
                   <FormInput
                     name={name}
@@ -88,11 +88,11 @@ function LoginScreen() {
                 control={control}
                 name="last_name"
                 rules={{
-                  required: "Tên không được để trống.",
+                  required: 'Tên không được để trống.'
                 }}
                 render={({
                   field: { onChange, name },
-                  fieldState: { error },
+                  fieldState: { error }
                 }) => (
                   <FormInput
                     name={name}
@@ -111,7 +111,7 @@ function LoginScreen() {
             control={control}
             name="username"
             rules={{
-              required: "Username không được để trống.",
+              required: 'Username không được để trống.'
             }}
             render={({ field: { onChange, name }, fieldState: { error } }) => (
               <FormInput
@@ -132,15 +132,15 @@ function LoginScreen() {
               control={control}
               name="email"
               rules={{
-                required: "Tài khoản không được để trống.",
+                required: 'Tài khoản không được để trống.',
                 maxLength: {
                   value: 100,
-                  message: "Email không được vượt quá 100 ký tự.",
-                },
+                  message: 'Email không được vượt quá 100 ký tự.'
+                }
               }}
               render={({
                 field: { onChange, name },
-                fieldState: { error },
+                fieldState: { error }
               }) => (
                 <FormInput
                   name={name}
@@ -157,7 +157,7 @@ function LoginScreen() {
             control={control}
             name="password"
             rules={{
-              required: "Mật khẩu không được để trống.",
+              required: 'Mật khẩu không được để trống.'
             }}
             render={({ field: { onChange, name }, fieldState: { error } }) => (
               <FormInput
@@ -180,11 +180,11 @@ function LoginScreen() {
                 control={control}
                 name="address"
                 rules={{
-                  required: "Địa chỉ không được để trống.",
+                  required: 'Địa chỉ không được để trống.'
                 }}
                 render={({
                   field: { onChange, name },
-                  fieldState: { error },
+                  fieldState: { error }
                 }) => (
                   <FormInput
                     name={name}
@@ -201,11 +201,11 @@ function LoginScreen() {
                 control={control}
                 name="phonenumber"
                 rules={{
-                  required: "Số điện thoại không được để trống.",
+                  required: 'Số điện thoại không được để trống.'
                 }}
                 render={({
                   field: { onChange, name },
-                  fieldState: { error },
+                  fieldState: { error }
                 }) => (
                   <FormInput
                     name={name}
@@ -224,13 +224,13 @@ function LoginScreen() {
         <p className="my-5 bg-[#393C49] w-full h-[1px]" />
         <button
           className={`btn-primary w-full text-white text-center bg-primary py-[14px] rounded-lg text-sm flex-center ${
-            !formState.isValid ? "disabl23" : ""
+            !formState.isValid ? 'disabl23' : ''
           }`}
           type="submit"
         >
           {isLoading && <LoadingSpinner size={20} />}
-          <span className={isLoading ? "ml-1" : ""}>
-            {!isLogin ? "Sign up" : "Sign in"}
+          <span className={isLoading ? 'ml-1' : ''}>
+            {!isLogin ? 'Sign up' : 'Sign in'}
           </span>
         </button>
         <p
@@ -240,7 +240,7 @@ function LoginScreen() {
             setIsErrLogin(false);
           }}
         >
-          {isLogin ? "Sign up" : "Sign in"}
+          {isLogin ? 'Sign up' : 'Sign in'}
         </p>
       </form>
     </div>

@@ -1,8 +1,8 @@
-import moment from "moment";
-import cookie from "react-cookies";
+import moment from 'moment';
+import cookie from 'react-cookies';
 
-import { AUTH_ACCESS_TOKEN } from "../constants/auth.keys";
-import { TokenDef, ApiResponseDef, InitialStateDef } from "../types/auth.types";
+import { AUTH_ACCESS_TOKEN } from '../constants/auth.keys';
+import { TokenDef, ApiResponseDef, InitialStateDef } from '../types/auth.types';
 
 /**
  * Loads token from session cookie
@@ -12,7 +12,7 @@ export const getTokens = () => {
   return {
     accessToken: cookieToken,
     refreshToken: cookieToken?.refreshToken,
-    expiresAt: cookieToken?.expiresAt,
+    expiresAt: cookieToken?.expiresAt
   } as TokenDef;
 };
 
@@ -20,14 +20,14 @@ export const getTokens = () => {
  * Save token and refresh token to session cookie,
  * Default value used for demo API
  */
-export const saveTokens = ({ expiresIn = "86400", token }: ApiResponseDef) => {
+export const saveTokens = ({ expiresIn = '86400', token }: ApiResponseDef) => {
   const cookieToken: TokenDef = {
     accessToken: token,
-    expiresAt: moment().add(expiresIn, "seconds").toDate(),
+    expiresAt: moment().add(expiresIn, 'seconds').toDate()
   };
   cookie.save(AUTH_ACCESS_TOKEN, cookieToken.accessToken as string, {
-    path: "/",
-    expires: cookieToken.expiresAt,
+    path: '/',
+    expires: cookieToken.expiresAt
   });
 };
 
@@ -35,7 +35,7 @@ export const saveTokens = ({ expiresIn = "86400", token }: ApiResponseDef) => {
  * Clear token from session cookie
  */
 export const clearTokens = () =>
-  cookie.remove(AUTH_ACCESS_TOKEN, { path: "/" });
+  cookie.remove(AUTH_ACCESS_TOKEN, { path: '/' });
 
 /**
  * simplify code in slice with helper

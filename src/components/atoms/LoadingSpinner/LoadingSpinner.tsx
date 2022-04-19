@@ -1,6 +1,6 @@
-import cx from "classnames";
-import { memo } from "react";
-import styles from "./LoadingSpinner.module.scss";
+import cx from 'classnames';
+import { memo } from 'react';
+import styles from './LoadingSpinner.module.scss';
 
 interface ILoadingSpinnerProps {
   size?: Number;

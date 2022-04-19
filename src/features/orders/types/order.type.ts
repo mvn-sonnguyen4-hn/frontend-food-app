@@ -1,4 +1,4 @@
-import { FoodDef } from "../../food/types/food.type";
+import { FoodDef } from '../../food/types/food.type';
 
 export type OrderDef = {
   food: FoodDef | null;

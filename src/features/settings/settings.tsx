@@ -1,1 +1,1 @@
-export { SETTING_ROUTES } from "./routes/settings.routes";
+export { SETTING_ROUTES } from './routes/settings.routes';

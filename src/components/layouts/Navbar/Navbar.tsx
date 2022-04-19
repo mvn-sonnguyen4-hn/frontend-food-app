@@ -1,7 +1,7 @@
-import React, { memo, ReactNode } from "react";
-import DashboardImage from "@app/assets/images/dashboard.png";
-import { NavLink } from "react-router-dom";
-import styles from "./Navbar.module.scss";
+import React, { memo, ReactNode } from 'react';
+import DashboardImage from '@app/assets/images/dashboard.png';
+import { NavLink } from 'react-router-dom';
+import styles from './Navbar.module.scss';
 
 interface NavbarProps {
   children: ReactNode;
@@ -14,7 +14,7 @@ const Navbar = memo(({ children }: NavbarProps) => (
       </NavLink>
       <NavLink
         to="/home"
-        className={({ isActive }) => (isActive ? styles.active : "")}
+        className={({ isActive }) => (isActive ? styles.active : '')}
       >
         <div className={styles.box}>
           <span className="material-icons-outlined">home</span>
@@ -22,7 +22,7 @@ const Navbar = memo(({ children }: NavbarProps) => (
       </NavLink>
       <NavLink
         to="/order"
-        className={({ isActive }) => (isActive ? styles.active : "")}
+        className={({ isActive }) => (isActive ? styles.active : '')}
       >
         <div className={styles.box}>
           <span className="material-icons-outlined">bookmark_added</span>
@@ -30,7 +30,7 @@ const Navbar = memo(({ children }: NavbarProps) => (
       </NavLink>
       <NavLink
         to="/settings"
-        className={({ isActive }) => (isActive ? styles.active : "")}
+        className={({ isActive }) => (isActive ? styles.active : '')}
       >
         <div className={styles.box}>
           <span className="material-icons-outlined">settings</span>

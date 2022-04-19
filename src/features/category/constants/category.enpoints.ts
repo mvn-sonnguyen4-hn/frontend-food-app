@@ -1,3 +1,3 @@
 export enum CategoryEndpointsEnum {
-  GET_ALL = "/category",
+  GET_ALL = '/category'
 }

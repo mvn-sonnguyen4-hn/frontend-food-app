@@ -1,8 +1,8 @@
-import cx from "classnames";
-import { useState } from "react";
-import { useAppDispatch } from "@app/redux/store";
-import { addOrder } from "@app/features/orders/orders";
-import styles from "./Food.module.scss";
+import cx from 'classnames';
+import { useState } from 'react';
+import { useAppDispatch } from '@app/redux/store';
+import { addOrder } from '@app/features/orders/orders';
+import styles from './Food.module.scss';
 
 interface IFoodProps {
   _id: string;
@@ -19,7 +19,7 @@ function Food({
   price,
   url_img,
   avaiable,
-  createOrder,
+  createOrder
 }: IFoodProps) {
   const [isHover, setIsHover] = useState(false);
   const dispatch = useAppDispatch();
@@ -31,9 +31,9 @@ function Food({
           name,
           price,
           url_img,
-          avaiable,
+          avaiable
         },
-        amount: 1,
+        amount: 1
       })
     );
     createOrder();
@@ -42,7 +42,7 @@ function Food({
     <div className="mt-4">
       <div
         className={cx(
-          "bg-dark-3 rounded-2xl h-[14rem] text-sm text-center cursor-pointer",
+          'bg-dark-3 rounded-2xl h-[14rem] text-sm text-center cursor-pointer',
           styles.item
         )}
         onMouseOver={() => setIsHover(true)}
@@ -58,7 +58,7 @@ function Food({
         <p className="mx-6">{name}</p>
         <p className="mt-2 mb-1">${price}</p>
         <p>{avaiable} Bowls available</p>
-        <button className={isHover ? styles.btnAdd : "hidden"} onClick={add}>
+        <button className={isHover ? styles.btnAdd : 'hidden'} onClick={add}>
           <span className="material-icons-outlined">add</span>
           Add To Order
         </button>

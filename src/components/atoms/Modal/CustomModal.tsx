@@ -1,8 +1,8 @@
-import { memo, ReactNode } from "react";
-import Modal from "react-modal";
-import "./CustomModal.scss";
+import { memo, ReactNode } from 'react';
+import Modal from 'react-modal';
+import './CustomModal.scss';
 
-Modal.setAppElement("#root");
+Modal.setAppElement('#root');
 interface IPropsModal {
   isShow: boolean;
   children: ReactNode;
@@ -20,26 +20,26 @@ function CustomModal(props: IPropsModal) {
         shouldCloseOnOverlayClick
         style={{
           overlay: {
-            background: "rgba(0,0,0,0.6)",
-            cursor: "pointer",
+            background: 'rgba(0,0,0,0.6)',
+            cursor: 'pointer'
           },
           content: {
-            position: "absolute",
-            top: "0",
-            left: "100%",
-            transform: "translateX(-100%)",
-            background: "#1F1D2B",
-            border: "none",
-            overflow: "auto",
-            WebkitOverflowScrolling: "touch",
-            borderRadius: "4px",
-            outline: "none",
-            padding: "20px",
-            width: "26rem",
-            height: "100vh",
-            animation: "transformX 0.5s ease-in-out",
-            cursor: "default",
-          },
+            position: 'absolute',
+            top: '0',
+            left: '100%',
+            transform: 'translateX(-100%)',
+            background: '#1F1D2B',
+            border: 'none',
+            overflow: 'auto',
+            WebkitOverflowScrolling: 'touch',
+            borderRadius: '4px',
+            outline: 'none',
+            padding: '20px',
+            width: '26rem',
+            height: '100vh',
+            animation: 'transformX 0.5s ease-in-out',
+            cursor: 'default'
+          }
         }}
         contentLabel="Example Modal"
       >

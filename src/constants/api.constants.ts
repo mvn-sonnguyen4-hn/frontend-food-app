@@ -6,5 +6,5 @@ export enum ApiStatusCodes {
   CREATED = 201,
   NO_CONTENT = 204,
   UNAUTHORIZED = 401,
-  NOT_FOUND = 404,
+  NOT_FOUND = 404
 }

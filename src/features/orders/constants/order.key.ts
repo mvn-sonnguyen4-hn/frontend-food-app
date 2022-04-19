@@ -1,1 +1,1 @@
-export const ORDER_FEATURE_KEY = "order";
+export const ORDER_FEATURE_KEY = 'order';

@@ -1,4 +1,4 @@
-@import "@app/scss/variables.scss";
+@import '@app/scss/variables.scss';
 .navItem {
   position: relative;
   width: 100%;
@@ -29,7 +29,7 @@
   box-shadow: 0px 8px 24px rgba(234, 124, 105, 0.32);
 }
 .active::before {
-  content: "";
+  content: '';
   position: absolute;
   width: 20px;
   height: 20px;
@@ -41,7 +41,7 @@
   box-shadow: 10px 10px 0 0 #252836;
 }
 .active::after {
-  content: "";
+  content: '';
   position: absolute;
   width: 20px;
   height: 20px;
