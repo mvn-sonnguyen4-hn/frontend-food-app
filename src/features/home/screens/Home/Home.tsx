@@ -1,13 +1,17 @@
 import LoadingSpinner from "@app/components/atoms/LoadingSpinner/LoadingSpinner";
+import CustomModal from "@app/components/atoms/Modal/CustomModal";
 import Menu from "@app/components/layouts/Menu/Menu";
 import {
   FoodResponse,
   getFoodByPaginationAndCategoryType,
-  getListFood,
 } from "@app/features/food/food";
 import Food from "@app/features/food/screens/Food/Food";
 import { useEffect, useState } from "react";
 import { useSearchParams, useLocation } from "react-router-dom";
+import ListOrders from "@app/features/orders/screens/ListOrder/ListOrders";
+import Toastify from "@app/components/atoms/Toastify/Toastify";
+import { enumToastify } from "@app/types/atom.type";
+
 const Home = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [listFood, setListFood] = useState<FoodResponse>({
@@ -18,7 +22,9 @@ const Home = () => {
   });
   useEffect(() => {
     setIsLoading(true);
-    getListFood()
+    const page = searchParams.get("page") || 1;
+    const type = searchParams.get("type") || "Hot dishes";
+    getFoodByPaginationAndCategoryType(Number(page), type)
       .then((res) => {
         setListFood({
           data: res.data.data,
@@ -39,10 +45,12 @@ const Home = () => {
         return (
           <Food
             key={index}
+            _id={f._id}
             name={f.name}
             price={f.price}
             avaiable={f.avaiable}
             url_img={f.url_img}
+            createOrder={addOder}
           />
         );
       });
@@ -72,12 +80,27 @@ const Home = () => {
         setIsLoading(false);
       });
   }, [location]);
+  const [isShow, setIsShow] = useState(false);
+  const [isShowToast, setIsShowToast] = useState(false);
+  const closeModal = () => {
+    setIsShow(false);
+    setIsShowToast(true);
+  };
+  const addOder = () => {
+    setIsShow(true);
+  };
   return (
     <div className="bg-dark min-h-[100vh] text-white pt-8 px-14">
       <p className="text-3xl">Jaegar Resto</p>
       <p className="mb-6 mt-1">Tuesday, 2 Feb 2021</p>
       <p className="mb-4 mt-6 text-xl font-bold">Choose Dishes</p>
       <Menu />
+      {isShowToast && (
+        <Toastify isShow={true} type={enumToastify.success} message="Suceess" />
+      )}
+      <CustomModal isShow={isShow} closeModal={closeModal}>
+        <ListOrders closeModal={closeModal} />
+      </CustomModal>
       {isLoading && (
         <div className="flex justify-center">
           {" "}

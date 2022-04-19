@@ -10,7 +10,6 @@ export const getFoodByPaginationAndCategoryType = (
   page: number,
   type: string
 ): Promise<AxiosResponse<FoodResponse>> => {
-  console.log(type);
   return api.get<FoodResponse>(FoodndpointsEnum.GET_LIST_FOOD, {
     params: {
       page,

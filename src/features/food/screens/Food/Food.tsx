@@ -1,16 +1,35 @@
 import styles from "./Food.module.scss";
 import cx from "classnames";
 import { useState } from "react";
+import { useAppDispatch } from "@app/redux/store";
+import { addOrder } from "@app/features/orders/orders";
 interface IFoodProps {
+  _id: string;
   name: string;
   price: number;
   description?: string;
   url_img: string;
   avaiable: number;
+  createOrder:Function;
 }
-const Food = ({ name, price, url_img, avaiable }: IFoodProps) => {
+const Food = ({ _id, name, price, url_img, avaiable,createOrder }: IFoodProps) => {
   const [isHover, setIsHover] = useState(false);
-  const addOrder = () => {};
+  const dispatch = useAppDispatch();
+  const add = () => {
+    dispatch(
+      addOrder({
+        food: {
+          _id,
+          name,
+          price,
+          url_img,
+          avaiable,
+        },
+        amount: 1,
+      })
+    );
+    createOrder()
+  };
   return (
     <div className="mt-4">
       <div
@@ -31,10 +50,7 @@ const Food = ({ name, price, url_img, avaiable }: IFoodProps) => {
         <p className="mx-6">{name}</p>
         <p className="mt-2 mb-1">$ {price}</p>
         <p>{avaiable} Bowls available</p>
-        <button
-          className={isHover ? styles.btnAdd : "hidden"}
-          onClick={addOrder}
-        >
+        <button className={isHover ? styles.btnAdd : "hidden"} onClick={add}>
           <span className="material-icons-outlined">add</span>
           Add To Order
         </button>

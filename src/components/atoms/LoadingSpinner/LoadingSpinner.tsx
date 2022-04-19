@@ -1,5 +1,6 @@
 import styles from "./LoadingSpinner.module.scss";
 import cx from "classnames";
+import { memo } from "react";
 interface ILoadingSpinnerProps {
   size?: Number;
   primaryColor?: Boolean;
@@ -15,4 +16,4 @@ const LoadingSpinner = ({ size, primaryColor }: ILoadingSpinnerProps) => {
   );
 };
 
-export default LoadingSpinner;
+export default memo(LoadingSpinner);

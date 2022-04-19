@@ -1,4 +1,5 @@
 export type FoodDef = {
+  _id:string;
   name: string;
   price: number;
   url_img: string;
