@@ -49,18 +49,18 @@
   }
 }
 
-.divider{
-  border-bottom: 1px solid #393C49;
+.divider {
+  border-bottom: 1px solid #393c49;
 }
-.delete{
-  border:1px solid $primary-color;
+.delete {
+  border: 1px solid $primary-color;
   border-radius: 8px;
   height: 100%;
   padding: 8px;
   color: $primary-color;
   cursor: pointer;
   transition: all 0.2s;
-  &:hover{
+  &:hover {
     color: white;
     background: $primary-color;
   }

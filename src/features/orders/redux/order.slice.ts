@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { InitialStateDef, OrderDef } from "../orders";
-import { ORDER_FEATURE_KEY } from "./../constants/order.key";
+import { ORDER_FEATURE_KEY } from "../constants/order.key";
+
 const initialState: InitialStateDef = {
   listOrder: [],
 };

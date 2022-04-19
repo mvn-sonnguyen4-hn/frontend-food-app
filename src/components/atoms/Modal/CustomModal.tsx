@@ -1,13 +1,14 @@
 import { memo, ReactNode } from "react";
 import Modal from "react-modal";
 import "./CustomModal.scss";
+
 Modal.setAppElement("#root");
 interface IPropsModal {
   isShow: boolean;
   children: ReactNode;
   closeModal: Function;
 }
-const CustomModal = (props: IPropsModal) => {
+function CustomModal(props: IPropsModal) {
   const closeModal = () => {
     props.closeModal();
   };
@@ -16,7 +17,7 @@ const CustomModal = (props: IPropsModal) => {
       <Modal
         isOpen={props.isShow}
         onRequestClose={closeModal}
-        shouldCloseOnOverlayClick={true}
+        shouldCloseOnOverlayClick
         style={{
           overlay: {
             background: "rgba(0,0,0,0.6)",
@@ -37,7 +38,7 @@ const CustomModal = (props: IPropsModal) => {
             width: "26rem",
             height: "100vh",
             animation: "transformX 0.5s ease-in-out",
-            cursor:'default'
+            cursor: "default",
           },
         }}
         contentLabel="Example Modal"
@@ -46,6 +47,6 @@ const CustomModal = (props: IPropsModal) => {
       </Modal>
     </div>
   );
-};
+}
 
 export default memo(CustomModal);

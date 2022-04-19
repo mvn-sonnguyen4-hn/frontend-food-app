@@ -1,6 +1,5 @@
 import FormInput from "@app/components/atoms/FormInput/FormInput";
 import { useAppDispatch, useAppSelector } from "@app/redux/store";
-import styles from "./ListOrder.module.scss";
 import cx from "classnames";
 import { Fragment, useState } from "react";
 import {
@@ -9,29 +8,28 @@ import {
   changeNoteOrder,
 } from "@app/features/orders/orders";
 import LoadingSpinner from "@app/components/atoms/LoadingSpinner/LoadingSpinner";
+import styles from "./ListOrder.module.scss";
 
-interface IPropsListOrders{
-  closeModal:Function;
+interface IPropsListOrders {
+  closeModal: Function;
 }
 
-const ListOrders = ({closeModal}:IPropsListOrders) => {
+function ListOrders({ closeModal }: IPropsListOrders) {
   const dispatch = useAppDispatch();
   const listOrders = useAppSelector((state) => state.order.listOrder);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleCreateOrders = async () => {
     setIsLoading(true);
-    const data = listOrders.map((order) => {
-      return {
-        food: order.food,
-        amount: order.amount,
-        note: order.note,
-      };
-    });
+    const data = listOrders.map((order) => ({
+      food: order.food,
+      amount: order.amount,
+      note: order.note,
+    }));
     const result = await createOrder(data);
     if (result) {
       setIsLoading(false);
-      closeModal()
+      closeModal();
     }
   };
 
@@ -50,7 +48,7 @@ const ListOrders = ({closeModal}:IPropsListOrders) => {
     dispatch(changeNoteOrder({ note: e.currentTarget.value, position: index }));
   };
 
-  //render list
+  // render list
   const renderListOrders = () => {
     const result = listOrders.map((order, index) => {
       const { food, amount, note } = order;
@@ -117,7 +115,7 @@ const ListOrders = ({closeModal}:IPropsListOrders) => {
           </thead>
           <tbody>
             {renderListOrders()}
-            <tr className={cx(styles.divider)}></tr>
+            <tr className={cx(styles.divider)} />
             <tr>
               <td colSpan={2}>Sub total</td>
               <td className="pl-4">21.1</td>
@@ -134,6 +132,6 @@ const ListOrders = ({closeModal}:IPropsListOrders) => {
       </div>
     </div>
   );
-};
+}
 
 export default ListOrders;

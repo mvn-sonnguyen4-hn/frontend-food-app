@@ -1,4 +1,5 @@
 import { RoleDef } from "@app/types/role.type";
+
 export type TokenDef = {
   accessToken?: string;
   refreshToken?: string;
@@ -27,8 +28,8 @@ export type RegisterRequestDef = {
 };
 
 export type UserDef = {
-  first_name:string;
-  last_name:string;
+  first_name: string;
+  last_name: string;
   username: string;
   email: string;
   address: string;

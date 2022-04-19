@@ -25,15 +25,17 @@ export const saveTokens = ({ expiresIn = "86400", token }: ApiResponseDef) => {
     accessToken: token,
     expiresAt: moment().add(expiresIn, "seconds").toDate(),
   };
-  cookie.save(AUTH_ACCESS_TOKEN, cookieToken.accessToken as string, { path: "/",expires:cookieToken.expiresAt });
+  cookie.save(AUTH_ACCESS_TOKEN, cookieToken.accessToken as string, {
+    path: "/",
+    expires: cookieToken.expiresAt,
+  });
 };
 
 /**
  * Clear token from session cookie
  */
-export const clearTokens = () => {
-  return cookie.remove(AUTH_ACCESS_TOKEN, { path: "/" });
-};
+export const clearTokens = () =>
+  cookie.remove(AUTH_ACCESS_TOKEN, { path: "/" });
 
 /**
  * simplify code in slice with helper

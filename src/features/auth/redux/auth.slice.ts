@@ -1,7 +1,7 @@
-import { RegisterRequestDef } from "./../types/auth.types";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import { LoginRequestDef, AUTH_FEATURE_KEY } from "@app/features/auth/auth";
+import { RegisterRequestDef, InitialStateDef } from "../types/auth.types";
 
 import { authLogin, authRegister, autoLogin } from "../api/auth.api";
 import {
@@ -9,7 +9,7 @@ import {
   clearTokens,
   authErrorHelper,
 } from "../helpers/auth.helpers";
-import { InitialStateDef } from "../types/auth.types";
+
 const initialState: InitialStateDef = {
   user: null,
   isAuthenticated: false,

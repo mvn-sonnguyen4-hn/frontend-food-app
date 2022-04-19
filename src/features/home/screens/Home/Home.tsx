@@ -12,7 +12,7 @@ import ListOrders from "@app/features/orders/screens/ListOrder/ListOrders";
 import Toastify from "@app/components/atoms/Toastify/Toastify";
 import { enumToastify } from "@app/types/atom.type";
 
-const Home = () => {
+function Home() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [listFood, setListFood] = useState<FoodResponse>({
     data: [],
@@ -41,22 +41,18 @@ const Home = () => {
 
   const showListFood = () => {
     if (listFood.data.length > 0) {
-      const result = listFood.data.map((f, index) => {
-        return (
-          <Food
-            key={index}
-            _id={f._id}
-            name={f.name}
-            price={f.price}
-            avaiable={f.avaiable}
-            url_img={f.url_img}
-            createOrder={addOder}
-          />
-        );
-      });
+      const result = listFood.data.map((f, index) => (
+        <Food
+          key={index}
+          _id={f._id}
+          name={f.name}
+          price={f.price}
+          avaiable={f.avaiable}
+          url_img={f.url_img}
+          createOrder={addOder}
+        />
+      ));
       return result;
-    } else {
-      return;
     }
   };
   const [searchParams] = useSearchParams();
@@ -96,7 +92,7 @@ const Home = () => {
       <p className="mb-4 mt-6 text-xl font-bold">Choose Dishes</p>
       <Menu />
       {isShowToast && (
-        <Toastify isShow={true} type={enumToastify.success} message="Suceess" />
+        <Toastify isShow type={enumToastify.success} message="Suceess" />
       )}
       <CustomModal isShow={isShow} closeModal={closeModal}>
         <ListOrders closeModal={closeModal} />
@@ -112,6 +108,6 @@ const Home = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Home;

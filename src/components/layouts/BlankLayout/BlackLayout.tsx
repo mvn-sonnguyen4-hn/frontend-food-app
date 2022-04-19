@@ -4,12 +4,8 @@ type BlankLayoutProps = {
   children: ReactNode;
 };
 
-const BlankLayout = memo(({ children }: BlankLayoutProps) => {
-  return (
-    <div>
-      {children}
-    </div>
-  );
-});
+const BlankLayout = memo(({ children }: BlankLayoutProps) => (
+  <div>{children}</div>
+));
 
 export default BlankLayout;

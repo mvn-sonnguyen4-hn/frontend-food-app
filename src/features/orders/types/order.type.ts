@@ -1,10 +1,11 @@
-import { FoodDef } from "./../../food/types/food.type";
+import { FoodDef } from "../../food/types/food.type";
+
 export type OrderDef = {
   food: FoodDef | null;
   amount: number | null;
-  note?:string;
+  note?: string;
 };
 
-export type InitialStateDef ={
-  listOrder:OrderDef[]
-}
+export type InitialStateDef = {
+  listOrder: OrderDef[];
+};

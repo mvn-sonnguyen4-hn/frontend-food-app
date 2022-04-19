@@ -52,10 +52,10 @@ const authInterceptor = async (request: AxiosRequestConfig) => {
  * Adds authorization headers to API calls
  * @param {AxiosResponse} response
  */
- const responseInterceptor = async (response: AxiosResponse) => {
-  if(response.status!==200){
-    alert("Da co loi xay ra")
-    window.location.assign('/error')
+const responseInterceptor = async (response: AxiosResponse) => {
+  if (response.status !== 200) {
+    alert("Da co loi xay ra");
+    window.location.assign("/error");
     return;
   }
   return response;
@@ -67,4 +67,4 @@ export const api = axios.create({
 });
 
 api.interceptors.request.use(authInterceptor);
-api.interceptors.response.use(responseInterceptor)
+api.interceptors.response.use(responseInterceptor);

@@ -11,7 +11,7 @@ import { useNavigate } from "react-router";
 import FormInput from "@app/components/atoms/FormInput/FormInput";
 import { register } from "../../redux/auth.slice";
 
-const LoginScreen = () => {
+function LoginScreen() {
   const [isLoading, setIsLoading] = useState<Boolean>(false);
   const [isErrLogin, setIsErrLogin] = useState<Boolean>(false);
   const [isLogin, setIsLogin] = useState<Boolean>(true);
@@ -58,7 +58,7 @@ const LoginScreen = () => {
         <p className="text-left font-28 mt-6 text-white text-2xl">
           {isLogin ? "Login" : "Sign up"}
         </p>
-        <p className="my-5 bg-[#393C49] w-full h-[1px]"></p>
+        <p className="my-5 bg-[#393C49] w-full h-[1px]" />
         {!isLogin && (
           <>
             <div>
@@ -126,32 +126,30 @@ const LoginScreen = () => {
         </div>
         {/* check login */}
         {!isLogin && (
-          <>
-            <div className="mt-3">
-              <p className="text-white font-14 mb-1 text-sm">Email</p>
-              <Controller
-                control={control}
-                name="email"
-                rules={{
-                  required: "Tài khoản không được để trống.",
-                  maxLength: {
-                    value: 100,
-                    message: "Email không được vượt quá 100 ký tự.",
-                  },
-                }}
-                render={({
-                  field: { onChange, name },
-                  fieldState: { error },
-                }) => (
-                  <FormInput
-                    name={name}
-                    error={error?.message}
-                    onChange={onChange}
-                  />
-                )}
-              />
-            </div>
-          </>
+          <div className="mt-3">
+            <p className="text-white font-14 mb-1 text-sm">Email</p>
+            <Controller
+              control={control}
+              name="email"
+              rules={{
+                required: "Tài khoản không được để trống.",
+                maxLength: {
+                  value: 100,
+                  message: "Email không được vượt quá 100 ký tự.",
+                },
+              }}
+              render={({
+                field: { onChange, name },
+                fieldState: { error },
+              }) => (
+                <FormInput
+                  name={name}
+                  error={error?.message}
+                  onChange={onChange}
+                />
+              )}
+            />
+          </div>
         )}
         <div className="mt-3">
           <p className="text-white font-14 mb-1 text-sm">Password</p>
@@ -223,12 +221,11 @@ const LoginScreen = () => {
         {isErrLogin && (
           <p className="text-xs text-red-600">Sai tài khoản hoặc mật khẩu.</p>
         )}
-        <p className="my-5 bg-[#393C49] w-full h-[1px]"></p>
+        <p className="my-5 bg-[#393C49] w-full h-[1px]" />
         <button
-          className={
-            "btn-primary w-full text-white text-center bg-primary py-[14px] rounded-lg text-sm flex-center " +
-            (!formState.isValid ? "disabl23" : "")
-          }
+          className={`btn-primary w-full text-white text-center bg-primary py-[14px] rounded-lg text-sm flex-center ${
+            !formState.isValid ? "disabl23" : ""
+          }`}
           type="submit"
         >
           {isLoading && <LoadingSpinner size={20} />}
@@ -248,6 +245,6 @@ const LoginScreen = () => {
       </form>
     </div>
   );
-};
+}
 
 export default LoginScreen;

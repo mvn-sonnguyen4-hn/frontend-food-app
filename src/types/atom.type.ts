@@ -1,4 +1,4 @@
-export enum enumToastify{
-    error='error',
-    success='success'
+export enum enumToastify {
+  error = "error",
+  success = "success",
 }

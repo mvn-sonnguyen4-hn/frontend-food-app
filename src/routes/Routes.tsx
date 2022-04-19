@@ -4,18 +4,23 @@ import { autoLoginUser } from "@app/features/auth/auth";
 import { useAppDispatch, useAppSelector } from "@app/redux/store";
 import { RouteItemDef, RouteWrapperConfigDef } from "@app/types/routes.types";
 import { ComponentType, ElementType, memo, useEffect } from "react";
-import { Routes as Switch, Route, useNavigate,Navigate } from "react-router-dom";
+import {
+  Routes as Switch,
+  Route,
+  useNavigate,
+  Navigate,
+} from "react-router-dom";
 import { PRIVATE_LIST, PUBLIC_LIST } from "./routes.config";
 
 const DefaultLayout = BlankLayout;
-const Routes = () => {
+function Routes() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   useEffect(() => {
     const autoLoginPromise = async () => {
       const response = await dispatch(autoLoginUser());
       if (autoLoginUser.fulfilled.match(response)) {
-        navigate('/')
+        navigate("/");
       }
     };
     autoLoginPromise();
@@ -26,19 +31,17 @@ const Routes = () => {
   const routeWrapper = (
     { id, path, layout, component }: RouteItemDef,
     { isProtectedRoute }: RouteWrapperConfigDef | undefined = {}
-  ) => {
-    return (
-      <Route
-        key={id}
-        path={path}
-        element={renderRoute(
-          component,
-          isProtectedRoute as RouteWrapperConfigDef,
-          layout as ElementType
-        )}
-      />
-    );
-  };
+  ) => (
+    <Route
+      key={id}
+      path={path}
+      element={renderRoute(
+        component,
+        isProtectedRoute as RouteWrapperConfigDef,
+        layout as ElementType
+      )}
+    />
+  );
   const renderRoute = (
     Component: ComponentType,
     isProtectedRoute: RouteWrapperConfigDef,
@@ -70,9 +73,9 @@ const Routes = () => {
             <NotFound />
           </DefaultLayout>
         )}
-      ></Route>
+      />
     </Switch>
   );
-};
+}
 
 export default memo(Routes);

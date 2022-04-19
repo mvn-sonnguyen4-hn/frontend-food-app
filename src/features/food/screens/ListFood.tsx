@@ -1,7 +1,5 @@
-const ListFood = () => {
-  return (
-    <div>ListFood</div>
-  )
+function ListFood() {
+  return <div>ListFood</div>;
 }
 
-export default ListFood
+export default ListFood;

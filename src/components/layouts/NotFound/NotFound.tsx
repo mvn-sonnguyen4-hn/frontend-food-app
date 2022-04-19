@@ -1,8 +1,5 @@
-
-const NotFound = () => {
-  return (
-    <div>NotFoundLayout</div>
-  )
+function NotFound() {
+  return <div>NotFoundLayout</div>;
 }
 
-export default NotFound
+export default NotFound;

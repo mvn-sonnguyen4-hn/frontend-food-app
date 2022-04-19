@@ -1,7 +1,5 @@
-const OrdersScreen = () => {
-  return (
-    <div className="bg-dark min-h-[100vh]">OrdersScreen</div>
-  )
+function OrdersScreen() {
+  return <div className="bg-dark min-h-[100vh]">OrdersScreen</div>;
 }
 
-export default OrdersScreen
+export default OrdersScreen;
