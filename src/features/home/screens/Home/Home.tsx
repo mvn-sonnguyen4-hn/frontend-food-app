@@ -35,26 +35,6 @@ function Home() {
     total: 1
   });
 
-  //get data
-  // useEffect(() => {
-  //   setIsLoading(true);
-  //   const page = searchParams.get('page') || 1;
-  //   const type = searchParams.get('type') || 'Hot dishes';
-  //   getFoodByPaginationAndCategoryType(Number(page), type)
-  //     .then(res => {
-  //       setListFood({
-  //         data: res.data.data,
-  //         totalPage: res.data.totalPage,
-  //         page: res.data.page,
-  //         limit: res.data.limit
-  //       });
-  //       setIsLoading(false);
-  //     })
-  //     .catch(() => {
-  //       setIsLoading(false);
-  //     });
-  // }, []);
-
   //handle pagination
   useEffect(() => {
     setIsLoading(true);
