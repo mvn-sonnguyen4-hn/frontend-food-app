@@ -1,55 +1,96 @@
 import FormInput from '@app/components/atoms/FormInput/FormInput';
 import { useAppDispatch, useAppSelector } from '@app/redux/store';
 import cx from 'classnames';
-import { Fragment, useState } from 'react';
+import { ChangeEvent, Fragment, useMemo, useState } from 'react';
 import {
-  createOrder,
   changeAmountOrder,
-  changeNoteOrder,
-  resetOrders
+  changeNoteOrder
 } from '@app/features/orders/orders';
 import styles from './OrderSidebar.module.scss';
 import LoadingSpinner from '@app/components/atoms/LoadingSpinner/LoadingSpinner';
+import { formatCurrency } from '@app/utils/functions';
+import {
+  uploadOrders,
+  removeOrder,
+  changeStatusOrder,
+  updateOrders
+  // removeOrders
+} from '../../redux/order.slice';
+import CustomSelect from '@app/components/atoms/CustomSelect/CustomSelect';
+import { dataSelectStatus } from '@app/constants/selectbox.constants';
+import { CustomSelectProps } from '@app/types/atom.type';
 
 interface IPropsListOrders {
   closeModalAndNotify: Function;
+  isEdit?: boolean;
 }
 
-function OrderSidebar({ closeModalAndNotify }: IPropsListOrders) {
+function OrderSidebar({
+  closeModalAndNotify,
+  isEdit = false
+}: IPropsListOrders) {
   const dispatch = useAppDispatch();
   const listOrders = useAppSelector(state => state.order.listOrder);
+  const orderStore = useAppSelector(state => state.order);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleCreateOrders = async () => {
+    if (!listOrders.length) {
+      return;
+    }
     setIsLoading(true);
-    const data = listOrders.map(order => ({
-      food: order.food,
-      amount: order.amount,
-      note: order.note
-    }));
-    const result = await createOrder(data);
-    if (result) {
+    const result = await dispatch(uploadOrders(listOrders));
+    if (uploadOrders.fulfilled.match(result)) {
       setIsLoading(false);
-      dispatch(resetOrders());
       closeModalAndNotify(true);
     } else {
       closeModalAndNotify();
     }
   };
-
-  const changeAmount = (
-    e: React.FormEvent<HTMLInputElement>,
-    index: number
-  ) => {
+  const total = useMemo(() => {
+    return listOrders.reduce((total, item) => {
+      return total + (item.amount ?? 0) * (item.food?.price ?? 0);
+    }, 0);
+  }, [listOrders]);
+  const changeAmount = (e: ChangeEvent<HTMLInputElement>, index: number) => {
     dispatch(
       changeAmountOrder({
-        amount: Number(e.currentTarget.value),
+        amount: Number(e.target.value) < 1 ? 0 : Number(e.target.value),
         position: index
       })
     );
   };
-  const changeNote = (e: React.FormEvent<HTMLInputElement>, index: number) => {
-    dispatch(changeNoteOrder({ note: e.currentTarget.value, position: index }));
+  const changeNote = (e: ChangeEvent<HTMLInputElement>, index: number) => {
+    dispatch(changeNoteOrder({ note: e.target.value, position: index }));
+  };
+  const onChangeSelect = (item: CustomSelectProps) => {
+    dispatch(changeStatusOrder(item.title));
+  };
+  const save = async () => {
+    if (!listOrders.length) {
+      return;
+    }
+    setIsLoading(true);
+    const foods = listOrders.map(item => {
+      return {
+        food: item.food?._id ?? '',
+        amount: item.amount ?? 0,
+        note: item.note ?? ''
+      };
+    });
+    const data = {
+      listFood: foods,
+      _id: orderStore._id,
+      status: orderStore.status
+    };
+    const result = await dispatch(updateOrders(data));
+    if (updateOrders.fulfilled.match(result)) {
+      setIsLoading(false);
+      closeModalAndNotify(true);
+    } else {
+      setIsLoading(false);
+      closeModalAndNotify();
+    }
   };
 
   // render list
@@ -70,21 +111,28 @@ function OrderSidebar({ closeModalAndNotify }: IPropsListOrders) {
                 </div>
                 <div>
                   <p className="text-sm">{food?.name}</p>
-                  <p className="text-xs text-[#ABBBC2]">{food?.price}</p>
+                  <p className="text-xs text-[#ABBBC2]">
+                    {formatCurrency(food?.price ?? 0)}
+                  </p>
                 </div>
               </div>
             </td>
-            <td className="pt-3">
+            <td className="pt-3 w-[3rem]">
               <div className="w-full h-[28px]">
                 <FormInput
                   type="number"
-                  value={amount || 1}
+                  value={amount || ''}
                   onChange={e => changeAmount(e, index)}
                 />
               </div>
             </td>
             <td className="align-middle pt-6 pl-4">
-              <p className="whitespace-nowrap">$ 4,58</p>
+              <p
+                className="whitespace-nowrap w-[100px] text-ellipsis overflow-hidden"
+                title={formatCurrency((food?.price ?? 0) * (amount ?? 0))}
+              >
+                {formatCurrency((food?.price ?? 0) * (amount ?? 0))}
+              </p>
             </td>
           </tr>
           <tr>
@@ -94,10 +142,15 @@ function OrderSidebar({ closeModalAndNotify }: IPropsListOrders) {
                 onChange={e => changeNote(e, index)}
               />
             </td>
-            <td className="flex-center pl-4 pt-2">
-              <div className={cx('flex-center', styles.delete)}>
-                <span className="material-icons-outlined">delete</span>
-              </div>
+            <td className="pl-4 pt-2">
+              {!isEdit && (
+                <div
+                  className={cx('flex-center w-[3rem]', styles.delete)}
+                  onClick={() => deleteOrder(index)}
+                >
+                  <span className="material-icons-outlined">delete</span>
+                </div>
+              )}
             </td>
           </tr>
         </Fragment>
@@ -105,10 +158,27 @@ function OrderSidebar({ closeModalAndNotify }: IPropsListOrders) {
     });
     return result;
   };
+  const deleteOrder = (index: number) => {
+    dispatch(removeOrder(index));
+  };
+  // const handleRemoveOrders = () => {
+  // dispatch(removeOrders(['']));
+  // }
   return (
     <div>
       <div className="text-white">
-        <p>Orders #34562</p>
+        <div className="flex items-center justify-between mb-5">
+          <p>Orders #34562</p>
+          {isEdit && (
+            <CustomSelect
+              value={{
+                title: orderStore.status
+              }}
+              onChange={onChangeSelect}
+              data={dataSelectStatus}
+            />
+          )}
+        </div>
         <table className="w-full">
           <thead>
             <tr className={cx(styles.divider)}>
@@ -119,20 +189,43 @@ function OrderSidebar({ closeModalAndNotify }: IPropsListOrders) {
           </thead>
           <tbody>
             {renderListOrders()}
-            <tr className={cx(styles.divider)} />
             <tr>
-              <td colSpan={2}>Sub total</td>
-              <td className="pl-4">21.1</td>
+              <td colSpan={3}>
+                <div className={cx(styles.divider, 'pt-6')}></div>
+              </td>
+            </tr>
+            <tr>
+              <td colSpan={2} className="pt-6">
+                Sub total
+              </td>
+              <td className="pl-4 pt-6">{formatCurrency(total)}</td>
             </tr>
           </tbody>
         </table>
-        <button
-          className="btn-primary w-full py-3 mt-7 flex-center outline-none border-none"
-          onClick={handleCreateOrders}
-        >
-          {isLoading && <LoadingSpinner size={20} />}
-          <span className="ml-1">Create order</span>
-        </button>
+        {!isEdit ? (
+          <button
+            className={`btn-primary w-full py-3 mt-7 flex-center outline-none border-none ${
+              listOrders.length === 0 ? 'opacity-50' : ''
+            }`}
+            onClick={handleCreateOrders}
+          >
+            {isLoading && <LoadingSpinner size={20} />}
+            <span className="ml-1">Create order</span>
+          </button>
+        ) : (
+          <div className="flex gap-2 mt-12">
+            <button
+              className="btn-primary-outline flex-center flex-1"
+              onClick={() => closeModalAndNotify()}
+            >
+              Cancel
+            </button>
+            <button className="btn-primary flex-center flex-1" onClick={save}>
+              {isLoading && <LoadingSpinner size={20} />}
+              Save changes
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

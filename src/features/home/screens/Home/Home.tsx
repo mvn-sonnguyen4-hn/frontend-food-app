@@ -14,7 +14,11 @@ import { enumToastify } from '@app/types/atom.type';
 import Pagination from '@app/components/atoms/Pagination/Pagination';
 
 function Home() {
+  const [searchParams] = useSearchParams();
+  const location = useLocation();
+  //state
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isShow, setIsShow] = useState(false);
   const [listFood, setListFood] = useState<FoodResponse>({
     data: [],
     totalPage: 0,
@@ -31,43 +35,27 @@ function Home() {
     total: 1
   });
 
-  useEffect(() => {
-    setIsLoading(true);
-    const page = searchParams.get('page') || 1;
-    const type = searchParams.get('type') || 'Hot dishes';
-    getFoodByPaginationAndCategoryType(Number(page), type)
-      .then(res => {
-        setListFood({
-          data: res.data.data,
-          totalPage: res.data.totalPage,
-          page: res.data.page,
-          limit: res.data.limit
-        });
-        setIsLoading(false);
-      })
-      .catch(() => {
-        setIsLoading(false);
-      });
-  }, []);
+  //get data
+  // useEffect(() => {
+  //   setIsLoading(true);
+  //   const page = searchParams.get('page') || 1;
+  //   const type = searchParams.get('type') || 'Hot dishes';
+  //   getFoodByPaginationAndCategoryType(Number(page), type)
+  //     .then(res => {
+  //       setListFood({
+  //         data: res.data.data,
+  //         totalPage: res.data.totalPage,
+  //         page: res.data.page,
+  //         limit: res.data.limit
+  //       });
+  //       setIsLoading(false);
+  //     })
+  //     .catch(() => {
+  //       setIsLoading(false);
+  //     });
+  // }, []);
 
-  const showListFood = () => {
-    if (listFood.data.length > 0) {
-      const result = listFood.data.map((f, index) => (
-        <Food
-          key={index}
-          _id={f._id}
-          name={f.name}
-          price={f.price}
-          avaiable={f.avaiable}
-          url_img={f.url_img}
-          createOrder={addOder}
-        />
-      ));
-      return result;
-    }
-  };
-  const [searchParams] = useSearchParams();
-  const location = useLocation();
+  //handle pagination
   useEffect(() => {
     setIsLoading(true);
     setListFood({
@@ -91,7 +79,26 @@ function Home() {
         setIsLoading(false);
       });
   }, [location]);
-  const [isShow, setIsShow] = useState(false);
+
+  // render list food
+  const showListFood = () => {
+    if (listFood.data.length > 0) {
+      const result = listFood.data.map((f, index) => (
+        <Food
+          key={index}
+          _id={f._id}
+          name={f.name}
+          price={f.price}
+          avaiable={f.avaiable}
+          url_img={f.url_img}
+          createOrder={addOder}
+        />
+      ));
+      return result;
+    }
+  };
+
+  // handle modal
   const closeModalAndNotify = (success: boolean = false) => {
     setIsShow(false);
     if (success) {
@@ -113,6 +120,7 @@ function Home() {
   const addOder = () => {
     setIsShow(true);
   };
+
   return (
     <div className="bg-dark min-h-[100vh] text-white pt-8 px-14">
       <p className="text-3xl">Jaegar Resto</p>

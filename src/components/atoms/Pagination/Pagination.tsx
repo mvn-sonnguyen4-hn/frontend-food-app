@@ -34,7 +34,7 @@ const Pagination = ({
             arrow_back_ios
           </span>
         }
-        disabledLinkClassName="text-[#AF635A]"
+        disabledLinkClassName="text-[#9b5a55]"
         previousLinkClassName="text-primary leading-[1rem]"
         nextLinkClassName="text-primary leading-[1rem]"
         containerClassName="flex items-center"

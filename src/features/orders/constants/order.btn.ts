@@ -3,7 +3,7 @@ import { enumOrder } from '../orders';
 export const ButtonsOrder = [
   {
     type: enumOrder.COMPLETED,
-    background: '#1F1D2B',
+    background: '#456465',
     color: '#50D1AA'
   },
   {
@@ -12,7 +12,7 @@ export const ButtonsOrder = [
     color: '#9D0505'
   },
   {
-    type: enumOrder.ORDER,
+    type: enumOrder.ORDERED,
     background: '#30405C',
     color: '#65B0F6'
   },
@@ -24,6 +24,6 @@ export const ButtonsOrder = [
   {
     type: enumOrder.PREPARING,
     background: '#363455',
-    color: '#9290FE;'
+    color: '#9290FE'
   }
 ];

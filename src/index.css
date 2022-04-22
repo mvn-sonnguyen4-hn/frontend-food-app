@@ -24,3 +24,20 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+@layer components {
+  .btn-primary {
+    border: 1px solid theme('colors.primary');
+    border-radius: 8px;
+    color: theme('colors.white');
+    background: theme('colors.primary');
+    padding: 14px 0;
+  }
+  .btn-primary-outline {
+    border: 1px solid theme('colors.primary');
+    border-radius: 8px;
+    color: theme('colors.primary');
+    background: #1f1d2b;
+    padding: 14px 0;
+  }
+}
