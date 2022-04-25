@@ -8,7 +8,7 @@ interface NavbarProps {
 }
 const Navbar = memo(({ children }: NavbarProps) => (
   <div>
-    <nav className="flex flex-col pl-3 fixed min-h-[100vh] max-h-[100vh] w-[6.5rem] bg-dark-second pt-6 text-primary text-[26px] overflow-hidden">
+    <nav className="flex flex-col pl-3 fixed min-h-[100vh] max-h-[100vh] w-[6.5rem] bg-dark-second pt-6 text-primary text-[26px]">
       <NavLink to="/home" className="mb-7 flex-center">
         <img src={DashboardImage} alt="" />
       </NavLink>
@@ -36,6 +36,18 @@ const Navbar = memo(({ children }: NavbarProps) => (
           <span className="material-icons-outlined">settings</span>
         </div>
       </NavLink>
+      <div className="absolute bottom-8 left-[50%] translate-x-[-50%]">
+        <span className="material-icons-outlined text-4xl">account_circle</span>
+        <div className="absolute top-0 left-[100%] text-lg">
+          <ul>
+            <li>
+              <span className="material-icons-outlined">manage_accounts</span>
+              Setting user
+            </li>
+            <li>Logout</li>
+          </ul>
+        </div>
+      </div>
     </nav>
     <div className="ml-[6.5rem]">{children}</div>
   </div>

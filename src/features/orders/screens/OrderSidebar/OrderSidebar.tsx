@@ -105,7 +105,7 @@ function OrderSidebar({
                 <div className="w-[3rem] h-[3rem] object-cover mr-2">
                   <img
                     className="w-full h-full rounded-full"
-                    src="http://hanoimoi.com.vn/Uploads/tuandiep/2018/4/8/1(1).jpg"
+                    src={order.food?.url_img ?? ''}
                     alt=""
                   />
                 </div>
