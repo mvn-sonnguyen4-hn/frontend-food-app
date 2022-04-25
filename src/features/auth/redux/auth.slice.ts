@@ -77,6 +77,7 @@ const authSlice = createSlice({
         email,
         phonenumber,
         address,
+        avatar_url,
         role
       } = action.payload.user;
       state.loading = false;
@@ -86,6 +87,7 @@ const authSlice = createSlice({
         last_name,
         username,
         email,
+        avatar_url,
         phonenumber,
         address,
         role
@@ -112,6 +114,7 @@ const authSlice = createSlice({
         last_name,
         username,
         email,
+        avatar_url,
         phonenumber,
         address,
         role
@@ -125,6 +128,7 @@ const authSlice = createSlice({
         email,
         phonenumber,
         address,
+        avatar_url,
         role
       };
       if (token) {
@@ -151,7 +155,8 @@ const authSlice = createSlice({
         email,
         phonenumber,
         address,
-        role
+        role,
+        avatar_url
       } = action.payload.user;
       state.loading = false;
       state.isAuthenticated = true;
@@ -162,6 +167,7 @@ const authSlice = createSlice({
         email,
         phonenumber,
         address,
+        avatar_url,
         role
       };
       if (token) {

@@ -31,6 +31,7 @@ export type UserDef = {
   first_name: string;
   last_name: string;
   username: string;
+  avatar_url?: string;
   email: string;
   address: string;
   phonenumber: number;
@@ -51,6 +52,7 @@ export type UserResponseDef = {
     username: string;
     email: string;
     first_name: string;
+    avatar_url?: string;
     last_name: string;
     phonenumber: number;
     adress: string;

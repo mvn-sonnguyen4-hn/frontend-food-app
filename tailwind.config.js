@@ -9,7 +9,8 @@ module.exports = {
       },
       colors: {
         primary: '#ea7c69',
-        'red-main':'#9D0505'
+        'red-main':'#9D0505',
+        dark: '#252836',
       },
       gridTemplateColumns: {
         192: 'repeat(auto-fill, 12rem)',

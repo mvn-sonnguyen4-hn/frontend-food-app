@@ -52,3 +52,12 @@
   transform: translateY(100%);
   box-shadow: 10px -10px 0 0 #252836;
 }
+
+.triangle {
+  position: absolute;
+  right: 100%;
+  bottom: 1rem;
+  border-top: 7px solid transparent;
+  border-right: 14px solid $dark-second-color;
+  border-bottom: 7px solid transparent;
+}
