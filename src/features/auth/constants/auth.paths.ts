@@ -1,3 +1,4 @@
 export enum AuthPathsEnum {
-  LOGIN = '/login'
+  LOGIN = '/login',
+  SETTING='/user/settings'
 }

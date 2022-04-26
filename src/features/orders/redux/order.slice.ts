@@ -1,4 +1,8 @@
-import { OrderUpdateDef, enumOrder } from './../types/order.type';
+import {
+  OrderUpdateDef,
+  enumOrder,
+  OrderRequestDef
+} from './../types/order.type';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   createOrder,
@@ -13,7 +17,9 @@ const initialState: InitialStateDef = {
   _id: '',
   listOrder: [],
   status: enumOrder.PREPARING,
-  username: '',
+  address: '',
+  phonenumber: 0,
+  user_id: '',
   createAt: '',
   error: false
 };
@@ -29,7 +35,7 @@ const initialState: InitialStateDef = {
 // );
 export const uploadOrders = createAsyncThunk(
   `${ORDER_FEATURE_KEY}/create`,
-  async (values: OrderDef[], { rejectWithValue }) => {
+  async (values: OrderRequestDef, { rejectWithValue }) => {
     try {
       const response = await createOrder(values);
       return response.data;
@@ -104,16 +110,28 @@ const orderSlice = createSlice({
       action: PayloadAction<{
         status: string;
         listOrders: OrderDef[];
-        username: string;
         createAt: string;
+        address: string;
+        phonenumber: number;
+        user_id: string;
         _id: string;
       }>
     ) {
-      const { status, listOrders, username, createAt, _id } = action.payload;
+      const {
+        status,
+        listOrders,
+        createAt,
+        _id,
+        address,
+        phonenumber,
+        user_id
+      } = action.payload;
       state.status = status;
       state.listOrder = listOrders;
-      state.username = username;
       state.createAt = createAt;
+      state.address = address;
+      state.phonenumber = phonenumber;
+      state.user_id = user_id;
       state._id = _id;
     },
     removeOrder(state, action: PayloadAction<number>) {
@@ -130,7 +148,6 @@ const orderSlice = createSlice({
       state.error = false;
       state.listOrder = [];
       state.status = enumOrder.PREPARING;
-      state.username = '';
     });
     builder.addCase(uploadOrders.rejected, state => {
       state.error = true;
@@ -142,7 +159,6 @@ const orderSlice = createSlice({
       state.error = false;
       state.listOrder = [];
       state.status = enumOrder.PREPARING;
-      state.username = '';
     });
     builder.addCase(updateOrders.rejected, state => {
       state.error = true;

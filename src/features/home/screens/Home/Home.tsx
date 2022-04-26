@@ -6,19 +6,23 @@ import {
   getFoodByPaginationAndCategoryType
 } from '@app/features/food/food';
 import Food from '@app/features/food/screens/Food/Food';
-import { useEffect, useRef, useState } from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 import { useSearchParams, useLocation } from 'react-router-dom';
 import OrderSidebar from '@app/features/orders/screens/OrderSidebar/OrderSidebar';
 import Toastify from '@app/components/atoms/Toastify/Toastify';
 import { enumToastify } from '@app/types/atom.type';
 import Pagination from '@app/components/atoms/Pagination/Pagination';
+import { useAppSelector } from '@app/redux/store';
 
 function Home() {
-  const [searchParams] = useSearchParams();
+  const orders = useAppSelector(state => state.order.listOrder);
+  const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
+
   //state
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isShow, setIsShow] = useState(false);
+  const [keyword, setKeyword] = useState(searchParams.get('keyword') || '');
   const [listFood, setListFood] = useState<FoodResponse>({
     data: [],
     totalPage: 0,
@@ -46,7 +50,8 @@ function Home() {
     });
     const page = searchParams.get('page') || 1;
     const type = searchParams.get('type') || '';
-    getFoodByPaginationAndCategoryType(Number(page), type)
+    const keyword = searchParams.get('keyword') || '';
+    getFoodByPaginationAndCategoryType(Number(page), type, keyword)
       .then(res => {
         setIsLoading(false);
         setListFood(res.data);
@@ -101,11 +106,51 @@ function Home() {
     setIsShow(true);
   };
 
+  const handleSearch = (e: FormEvent) => {
+    e.preventDefault();
+    let type = searchParams.get('type');
+    let searchType = { keyword: keyword } as any;
+    if (type) {
+      searchType = { keyword, type };
+    }
+    setSearchParams(searchType);
+  };
   return (
     <div className="bg-dark min-h-[100vh] text-white pt-8 px-14">
-      <p className="text-3xl">Jaegar Resto</p>
-      <p className="mb-6 mt-1">Tuesday, 2 Feb 2021</p>
-      <p className="mb-4 mt-6 text-xl font-bold">Choose Dishes</p>
+      <div className="flex items-end justify-between">
+        <div>
+          <p className="text-3xl">Jaegar Resto</p>
+          <p className="mb-6 mt-1">Tuesday, 2 Feb 2021</p>
+        </div>
+        <form onSubmit={handleSearch}>
+          <div className="bg-[#2D303E] rounded-lg border-solid border-[#393C49] border-[1px] flex items-center p-3">
+            <span className="material-icons-outlined text-white mr-2">
+              search
+            </span>
+            <input
+              type="text"
+              value={keyword}
+              onChange={e => setKeyword(e.target.value)}
+              placeholder="Search for food, coffe, etc.."
+              className="placeholder:text-[#ABBBC2] bg-transparent outline-none border-none"
+            />
+          </div>
+        </form>
+      </div>
+      <div className="flex justify-between items-end">
+        <p className="mb-4 mt-6 text-xl font-bold">Choose Dishes</p>
+        <div
+          className="relative cursor-pointer"
+          onClick={() => setIsShow(true)}
+        >
+          <span className="absolute top-0 right-[-14px] w-[1.2rem] h-[1.2rem] rounded-full bg-primary text-white flex-center">
+            {orders.length}
+          </span>
+          <span className="material-icons-outlined text-primary text-4xl">
+            shopping_cart
+          </span>
+        </div>
+      </div>
       <Menu />
       <Toastify
         type={statusToast.type}

@@ -1,15 +1,18 @@
 import React, { memo, ReactNode, useEffect, useState } from 'react';
 import DashboardImage from '@app/assets/images/dashboard.png';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import styles from './Navbar.module.scss';
-import { useAppSelector } from '@app/redux/store';
+import { useAppDispatch, useAppSelector } from '@app/redux/store';
+import { logout } from '@app/features/auth/auth';
 
 interface NavbarProps {
   children: ReactNode;
 }
 const Navbar = memo(({ children }: NavbarProps) => {
   const user = useAppSelector(state => state.auth.user);
+  const dispatch = useAppDispatch();
   const [isShowSettingUser, setIsShowSettingUser] = useState(false);
+  const navigate = useNavigate();
   useEffect(() => {
     document.addEventListener('click', handleClickOutside);
 
@@ -24,6 +27,13 @@ const Navbar = memo(({ children }: NavbarProps) => {
       return;
     }
     setIsShowSettingUser(false);
+  };
+  const handleSettingUser = () => {
+    setIsShowSettingUser(!isShowSettingUser);
+  };
+  const logoutUser = () => {
+    dispatch(logout());
+    navigate('/login');
   };
   return (
     <div>
@@ -59,7 +69,7 @@ const Navbar = memo(({ children }: NavbarProps) => {
           {user && user.avatar_url ? (
             <div
               className="w-[3.2rem] h-[3.2rem] object-cover rounded-full cursor-pointer icon-user"
-              onClick={() => setIsShowSettingUser(!isShowSettingUser)}
+              onClick={handleSettingUser}
             >
               <img
                 src={user.avatar_url}
@@ -70,7 +80,7 @@ const Navbar = memo(({ children }: NavbarProps) => {
           ) : (
             <span
               className="material-icons-outlined text-4xl cursor-pointer"
-              onClick={() => setIsShowSettingUser(!isShowSettingUser)}
+              onClick={handleSettingUser}
             >
               account_circle
             </span>
@@ -79,16 +89,31 @@ const Navbar = memo(({ children }: NavbarProps) => {
         {isShowSettingUser && (
           <div className="absolute bottom-8 left-[110%] text-lg">
             <ul className="bg-dark-second rounded-xl px-5 py-3">
-              <li className="flex items-center mb-3 hover:text-white cursor-pointer">
-                <span className="material-icons-outlined mr-2">
-                  manage_accounts
-                </span>
-                <span className="whitespace-nowrap">Setting user</span>
-              </li>
-              <li className="flex items-center hover:text-white cursor-pointer">
-                <span className="material-icons-outlined mr-2">logout</span>
-                <span>Logout</span>
-              </li>
+              {user ? (
+                <>
+                  <li className="flex items-center mb-3 hover:text-white cursor-pointer">
+                    <span className="material-icons-outlined mr-2">
+                      manage_accounts
+                    </span>
+                    <span className="whitespace-nowrap">Setting user</span>
+                  </li>
+                  <li
+                    className="flex items-center hover:text-white cursor-pointer"
+                    onClick={logoutUser}
+                  >
+                    <span className="material-icons-outlined mr-2">logout</span>
+                    <span>Logout</span>
+                  </li>
+                </>
+              ) : (
+                <li
+                  className="flex items-center hover:text-white cursor-pointer"
+                  onClick={() => navigate('/login')}
+                >
+                  <span className="material-icons-outlined mr-2">logout</span>
+                  <span>Login</span>
+                </li>
+              )}
             </ul>
             <div className={styles.triangle}></div>
           </div>

@@ -1,9 +1,14 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { LoginRequestDef, AUTH_FEATURE_KEY } from '@app/features/auth/auth';
 import { RegisterRequestDef, InitialStateDef } from '../types/auth.types';
 
-import { authLogin, authRegister, autoLogin } from '../api/auth.api';
+import {
+  authLogin,
+  authRegister,
+  autoLogin,
+  updateUser
+} from '../api/auth.api';
 import {
   saveTokens,
   clearTokens,
@@ -50,14 +55,38 @@ export const autoLoginUser = createAsyncThunk(
     }
   }
 );
+export const updateUserInfo = createAsyncThunk(
+  `${AUTH_FEATURE_KEY}/update`,
+  async (values: any, { rejectWithValue }) => {
+    try {
+      const response = await updateUser(values);
+      return response.data;
+    } catch (err: any) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: AUTH_FEATURE_KEY,
   initialState,
   reducers: {
-    clearUser(state) {
+    logout(state) {
       state.user = null;
       state.isAuthenticated = false;
+      state.error = false;
+      state.loading = false;
       clearTokens();
+    },
+    changeAdress(state, data: PayloadAction<{ address: string }>) {
+      if (state.user) {
+        state.user.address = data.payload.address;
+      }
+    },
+    changePhonenumber(state, data: PayloadAction<{ phonenumber: number }>) {
+      if (state.user) {
+        state.user.phonenumber = data.payload.phonenumber;
+      }
     }
   },
   extraReducers: builder => {
@@ -71,6 +100,7 @@ const authSlice = createSlice({
     builder.addCase(login.fulfilled, (state, action) => {
       const token = action.payload.jwt;
       const {
+        _id,
         first_name,
         last_name,
         username,
@@ -83,6 +113,7 @@ const authSlice = createSlice({
       state.loading = false;
       state.isAuthenticated = true;
       state.user = {
+        _id,
         first_name,
         last_name,
         username,
@@ -110,6 +141,7 @@ const authSlice = createSlice({
     builder.addCase(register.fulfilled, (state, action) => {
       const token = action.payload.jwt;
       const {
+        _id,
         first_name,
         last_name,
         username,
@@ -122,6 +154,7 @@ const authSlice = createSlice({
       state.loading = false;
       state.isAuthenticated = true;
       state.user = {
+        _id,
         first_name,
         last_name,
         username,
@@ -149,6 +182,7 @@ const authSlice = createSlice({
     builder.addCase(autoLoginUser.fulfilled, (state, action) => {
       const token = action.payload.jwt;
       const {
+        _id,
         first_name,
         last_name,
         username,
@@ -161,6 +195,7 @@ const authSlice = createSlice({
       state.loading = false;
       state.isAuthenticated = true;
       state.user = {
+        _id,
         first_name,
         last_name,
         username,
@@ -174,6 +209,26 @@ const authSlice = createSlice({
         saveTokens({ token });
       }
     });
+
+    // update user
+    builder.addCase(updateUserInfo.fulfilled, (state, action: any) => {
+      state.user = {
+        _id: action.payload.data._id,
+        first_name: action.payload.data.first_name,
+        last_name: action.payload.data.last_name,
+        username: action.payload.data.username,
+        email: action.payload.data.email,
+        phonenumber: action.payload.data.phonenumber,
+        address: action.payload.data.address,
+        avatar_url: action.payload.data.avatar_url,
+        role: action.payload.data.role
+      };
+    });
+    builder.addCase(updateUserInfo.rejected, state => {
+      state.user = null;
+      authErrorHelper(state);
+    });
+
     builder.addCase(autoLoginUser.rejected, state => {
       authErrorHelper(state);
       clearTokens();
@@ -181,6 +236,6 @@ const authSlice = createSlice({
   }
 });
 
-export const { clearUser } = authSlice.actions;
+export const { logout, changeAdress, changePhonenumber } = authSlice.actions;
 
 export const authReducer = authSlice.reducer;

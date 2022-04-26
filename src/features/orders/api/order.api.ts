@@ -1,10 +1,9 @@
-import { OrderUpdateDef } from './../types/order.type';
+import { OrderRequestDef, OrderUpdateDef } from './../types/order.type';
 import { api } from '@app/api/api';
 import { OrderEndpointsEnum } from '../constants/order.endpoints';
-import { OrderDef } from '../orders';
 
-export const createOrder = (data: OrderDef[]) =>
-  api.post(OrderEndpointsEnum.CREATE_ORDER, { listFood: data });
+export const createOrder = (data: OrderRequestDef) =>
+  api.post(OrderEndpointsEnum.CREATE_ORDER, data);
 
 export const getOrdersByUser = (page = 1) =>
   api.get(OrderEndpointsEnum.GET_ORDER_BY_USER, {
@@ -22,3 +21,10 @@ export const deleteOrders = (data: string[]) => {
     id_orders: data
   });
 };
+
+export const getOrdersByAdmin = (page = 1) =>
+  api.get(OrderEndpointsEnum.GET_ORDERS_BY_ADMIN, {
+    params: {
+      page
+    }
+  });

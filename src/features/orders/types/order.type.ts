@@ -12,8 +12,10 @@ export type InitialStateDef = {
   listOrder: OrderDef[];
   status: string;
   createAt: string;
-  username: string;
   error: boolean;
+  address: string;
+  phonenumber: number;
+  user_id: string;
 };
 
 export enum enumOrder {
@@ -42,4 +44,12 @@ export type OrderUpdateFoodsDef = {
   food: string;
   amount?: number;
   note?: string;
+};
+
+export type OrderRequestDef = {
+  listFood: OrderDef[];
+  address: string;
+  phonenumber: number;
+  user_id: string;
+  fullname?: string;
 };

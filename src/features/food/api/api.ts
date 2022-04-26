@@ -8,7 +8,8 @@ export const getListFood = (): Promise<AxiosResponse<FoodResponse>> =>
 
 export const getFoodByPaginationAndCategoryType = (
   page: number,
-  type: string
+  type: string,
+  keyword = ''
 ): Promise<AxiosResponse<FoodResponse>> => {
   if (!type) {
     type = 'Hot dishes';
@@ -17,7 +18,8 @@ export const getFoodByPaginationAndCategoryType = (
     params: {
       page,
       type,
-      limit: 3
+      limit: 3,
+      keyword
     }
   });
 };

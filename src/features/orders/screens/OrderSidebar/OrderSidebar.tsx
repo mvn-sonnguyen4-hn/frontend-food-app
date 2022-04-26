@@ -16,6 +16,7 @@ import {
   updateOrders
   // removeOrders
 } from '../../redux/order.slice';
+import { changeAdress, changePhonenumber } from '@app/features/auth/auth';
 import CustomSelect from '@app/components/atoms/CustomSelect/CustomSelect';
 import { dataSelectStatus } from '@app/constants/selectbox.constants';
 import { CustomSelectProps } from '@app/types/atom.type';
@@ -31,6 +32,7 @@ function OrderSidebar({
 }: IPropsListOrders) {
   const dispatch = useAppDispatch();
   const listOrders = useAppSelector(state => state.order.listOrder);
+  const user = useAppSelector(state => state.auth.user);
   const orderStore = useAppSelector(state => state.order);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -39,7 +41,14 @@ function OrderSidebar({
       return;
     }
     setIsLoading(true);
-    const result = await dispatch(uploadOrders(listOrders));
+    const result = await dispatch(
+      uploadOrders({
+        listFood: listOrders,
+        address: user?.address ?? '',
+        phonenumber: user?.phonenumber ?? 0,
+        user_id: user?._id ?? ''
+      })
+    );
     if (uploadOrders.fulfilled.match(result)) {
       setIsLoading(false);
       closeModalAndNotify(true);
@@ -164,6 +173,12 @@ function OrderSidebar({
   // const handleRemoveOrders = () => {
   // dispatch(removeOrders(['']));
   // }
+  const onChangeAddress = (e: ChangeEvent<HTMLInputElement>) => {
+    dispatch(changeAdress({ address: e.target.value }));
+  };
+  const onChangePhonenumber = (e: ChangeEvent<HTMLInputElement>) => {
+    dispatch(changePhonenumber({ phonenumber: Number(e.target.value) }));
+  };
   return (
     <div>
       <div className="text-white">
@@ -179,33 +194,47 @@ function OrderSidebar({
             />
           )}
         </div>
-        <table className="w-full">
-          <thead>
-            <tr className={cx(styles.divider)}>
-              <td className="pb-6">Item</td>
-              <td className="pb-6">Qty</td>
-              <td className="pb-6">Price</td>
-            </tr>
-          </thead>
-          <tbody>
-            {renderListOrders()}
-            <tr>
-              <td colSpan={3}>
-                <div className={cx(styles.divider, 'pt-6')}></div>
-              </td>
-            </tr>
-            <tr>
-              <td colSpan={2} className="pt-6">
-                Sub total
-              </td>
-              <td className="pl-4 pt-6">{formatCurrency(total)}</td>
-            </tr>
-          </tbody>
-        </table>
+        <div className="max-h-[500px] overflow-y-auto custom-scrollbar">
+          <table className="w-full">
+            <thead>
+              <tr className={cx(styles.divider)}>
+                <td className="pb-6">Item</td>
+                <td className="pb-6">Qty</td>
+                <td className="pb-6">Price</td>
+              </tr>
+            </thead>
+            <tbody>
+              {renderListOrders()}
+              <tr>
+                <td colSpan={3}>
+                  <div className={cx(styles.divider, 'pt-6')}></div>
+                </td>
+              </tr>
+              <tr>
+                <td colSpan={2} className="pt-6">
+                  Sub total
+                </td>
+                <td className="pl-4 pt-6">{formatCurrency(total)}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div className="mt-5">
+          <p>Address</p>
+          <FormInput value={user?.address} onChange={e => onChangeAddress(e)} />
+          <p className="mt-3">Phonenumber:</p>
+          <FormInput
+            value={user?.phonenumber}
+            type="number"
+            onChange={e => onChangePhonenumber(e)}
+          />
+        </div>
         {!isEdit ? (
           <button
             className={`btn-primary w-full py-3 mt-7 flex-center outline-none border-none ${
-              listOrders.length === 0 ? 'opacity-50' : ''
+              listOrders.length === 0 || !user?.address || !user?.phonenumber
+                ? 'opacity-50 pointer-events-none'
+                : ''
             }`}
             onClick={handleCreateOrders}
           >

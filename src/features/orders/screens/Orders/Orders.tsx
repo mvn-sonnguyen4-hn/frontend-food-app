@@ -10,17 +10,18 @@ import styles from './Orders.module.scss';
 import moment from 'moment';
 import Pagination from '@app/components/atoms/Pagination/Pagination';
 import { ButtonsOrder } from '../../constants/order.btn';
-import { useSearchParams, useLocation } from 'react-router-dom';
+import { useSearchParams, useLocation, useNavigate } from 'react-router-dom';
 import LoadingSpinner from '@app/components/atoms/LoadingSpinner/LoadingSpinner';
 import CustomModal from '@app/components/atoms/Modal/CustomModal';
 import OrderSidebar from '../OrderSidebar/OrderSidebar';
-import { useAppDispatch } from '@app/redux/store';
+import { useAppDispatch, useAppSelector } from '@app/redux/store';
 import { formatCurrency } from '@app/utils/functions';
 import { enumToastify } from '@app/types/atom.type';
 import Toastify from '@app/components/atoms/Toastify/Toastify';
 import Modal from 'react-modal';
 
 const Orders = () => {
+  const user = useAppSelector(state => state.auth.user);
   const [isCheckAll, setIsCheckAll] = useState(false);
   const [listOrders, setListOrders] = useState<OrderDetailDef[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -32,6 +33,7 @@ const Orders = () => {
   });
   const toastRef = useRef<any>();
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const location = useLocation();
   const [paginate, setPaginate] = useState({
     current: 1,
@@ -44,7 +46,9 @@ const Orders = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    getData();
+    if (user) {
+      getData();
+    }
   }, [location]);
   const getData = async () => {
     setIsLoading(true);
@@ -85,9 +89,11 @@ const Orders = () => {
       addListOrder({
         status: order.status,
         createAt: order.createdAt,
-        username: order.user.username,
         listOrders: order.foods,
-        _id: order._id
+        _id: order._id,
+        address: user?.address ?? '',
+        phonenumber: user?.phonenumber ?? 0,
+        user_id: user?._id ?? ''
       })
     );
     setIsShowModal(true);
@@ -109,6 +115,9 @@ const Orders = () => {
     toastRef.current.showToast();
   };
   const handleDeleteOrders = async () => {
+    if (!listOrders.length) {
+      return;
+    }
     setIsLoading(true);
     const listId = listOrders
       .filter(order => order.isChecked)
@@ -188,6 +197,16 @@ const Orders = () => {
     <div className="bg-dark min-h-[100vh] text-white pt-8 px-14">
       <p className="text-3xl">Orders</p>
       <div className="bg-[#393C49] w-full h-[1px] mt-6"></div>
+      {!user && (
+        <div className="flex-center mt-5">
+          <button
+            className="btn-primary w-[fit-content] px-2 py-2"
+            onClick={() => navigate('/login')}
+          >
+            Bạn cần đăng nhập để hiện thị orders
+          </button>
+        </div>
+      )}
       <div className="bg-dark-second mt-6 rounded-lg min-h-[700px]">
         {isLoading ? (
           <div
