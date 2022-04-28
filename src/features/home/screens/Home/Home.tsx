@@ -7,7 +7,7 @@ import {
 } from '@app/features/food/food';
 import Food from '@app/features/food/screens/Food/Food';
 import { FormEvent, useEffect, useRef, useState } from 'react';
-import { useSearchParams, useLocation } from 'react-router-dom';
+import { useSearchParams, useLocation, useNavigate } from 'react-router-dom';
 import OrderSidebar from '@app/features/orders/screens/OrderSidebar/OrderSidebar';
 import Toastify from '@app/components/atoms/Toastify/Toastify';
 import { enumToastify } from '@app/types/atom.type';
@@ -18,6 +18,7 @@ function Home() {
   const orders = useAppSelector(state => state.order.listOrder);
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
+  const navigate = useNavigate();
 
   //state
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -141,7 +142,7 @@ function Home() {
         <p className="mb-4 mt-6 text-xl font-bold">Choose Dishes</p>
         <div
           className="relative cursor-pointer"
-          onClick={() => setIsShow(true)}
+          onClick={() => navigate('/checkout')}
         >
           <span className="absolute top-0 right-[-14px] w-[1.2rem] h-[1.2rem] rounded-full bg-primary text-white flex-center">
             {orders.length}

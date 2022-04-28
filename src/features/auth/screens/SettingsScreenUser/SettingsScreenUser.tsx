@@ -1,7 +1,8 @@
 import FormInput from '@app/components/atoms/FormInput/FormInput';
 import LoadingSpinner from '@app/components/atoms/LoadingSpinner/LoadingSpinner';
 import Toastify from '@app/components/atoms/Toastify/Toastify';
-import { URL_IMAGE_DEFAULT } from '@app/constants/env';
+import { ENV } from '@app/constants/env';
+import { dataInput } from '@app/constants/validation.constanst';
 import { useAppDispatch, useAppSelector } from '@app/redux/store';
 import { enumToastify } from '@app/types/atom.type';
 import { useRef, useState } from 'react';
@@ -22,6 +23,49 @@ const SettingsScreen = () => {
     mode: 'onChange'
   });
   const inputFileRef = useRef<any>(null);
+
+  const showInput = () => {
+    if (!user) {
+      return null;
+    }
+    const values = [
+      user?.first_name ?? '',
+      user?.last_name ?? '',
+      user?.address ?? '',
+      user?.phonenumber ?? 0
+    ];
+    for (let i = 0; i < dataInput.length; i++) {
+      dataInput[i].value = values[i];
+    }
+    const result = dataInput.map(item => {
+      return (
+        <div key={item.name}>
+          <p className="text-white font-14 mb-1 text-sm mt-3">{item.label}:</p>
+          <Controller
+            defaultValue={item.value}
+            control={control}
+            name={item.name}
+            rules={item.rules}
+            render={({
+              field: { onChange, name, value = item.value },
+              fieldState: { error }
+            }) => {
+              return (
+                <FormInput
+                  name={name}
+                  value={value}
+                  error={error?.message}
+                  onChange={onChange}
+                  type="text"
+                />
+              );
+            }}
+          />
+        </div>
+      );
+    });
+    return result;
+  };
 
   const onSubmit: SubmitHandler<any> = async data => {
     if (isLoading) {
@@ -54,81 +98,6 @@ const SettingsScreen = () => {
     }
     toastRef.current.showToast();
     setIsLoading(false);
-  };
-  const showInput = () => {
-    if (!user) {
-      return null;
-    }
-    const dataInput = [
-      {
-        label: 'Firstname',
-        name: 'first_name',
-        rules: {
-          required: 'Họ không được để trống.'
-        },
-        value: user?.first_name
-      },
-      {
-        label: 'Lastname',
-        name: 'last_name',
-        rules: {
-          required: 'Ten không được để trống.'
-        },
-        value: user?.last_name
-      },
-      {
-        label: 'Username',
-        name: 'username',
-        rules: {
-          required: 'Username không được để trống.'
-        },
-        value: user?.username
-      },
-      {
-        label: 'Address',
-        name: 'address',
-        rules: {
-          required: 'Dia chi không được để trống.'
-        },
-        value: user?.address
-      },
-      {
-        label: 'Phonenumber',
-        name: 'phonenumber',
-        rules: {
-          required: 'So dien thoai không được để trống.'
-        },
-        value: user?.phonenumber
-      }
-    ];
-    const result = dataInput.map(item => {
-      return (
-        <div key={item.name}>
-          <p className="text-white font-14 mb-1 text-sm mt-3">{item.label}:</p>
-          <Controller
-            defaultValue={item.value}
-            control={control}
-            name={item.name}
-            rules={item.rules}
-            render={({
-              field: { onChange, name, value = item.value },
-              fieldState: { error }
-            }) => {
-              return (
-                <FormInput
-                  name={name}
-                  value={value}
-                  error={error?.message}
-                  onChange={onChange}
-                  type="text"
-                />
-              );
-            }}
-          />
-        </div>
-      );
-    });
-    return result;
   };
   const clickInputFile = () => {
     inputFileRef.current.click();
@@ -164,7 +133,7 @@ const SettingsScreen = () => {
                     ? img_url
                     : user && user.avatar_url
                     ? user?.avatar_url
-                    : URL_IMAGE_DEFAULT
+                    : ENV.URL_IMAGE_DEFAULT
                 }
                 alt=""
               />
@@ -204,4 +173,3 @@ const SettingsScreen = () => {
 };
 
 export default SettingsScreen;
-

@@ -3,6 +3,7 @@ import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import {
   addListOrder,
   getOrdersByUser,
+  getOrdersByAdmin,
   OrderDetailDef,
   removeOrders
 } from '../../orders';
@@ -19,6 +20,7 @@ import { formatCurrency } from '@app/utils/functions';
 import { enumToastify } from '@app/types/atom.type';
 import Toastify from '@app/components/atoms/Toastify/Toastify';
 import Modal from 'react-modal';
+import { AUTH_ROLE } from '@app/constants/auth.constants';
 
 const Orders = () => {
   const user = useAppSelector(state => state.auth.user);
@@ -53,7 +55,13 @@ const Orders = () => {
   const getData = async () => {
     setIsLoading(true);
     const page = searchParams.get('page') || 1;
-    const result = await getOrdersByUser(Number(page));
+    let result;
+
+    if (user && user.role === AUTH_ROLE.USER) {
+      result = await getOrdersByUser(Number(page));
+    } else {
+      result = await getOrdersByAdmin(Number(page));
+    }
     if (result.status === 200) {
       setListOrders(result.data.data);
       setPaginate({
@@ -171,7 +179,7 @@ const Orders = () => {
                 />
               </div>
             </td>
-            <td onClick={() => chooseOrder(order)}>{order.user.username}</td>
+            <td onClick={() => chooseOrder(order)}>{order.user?order.user.username:order.fullname}</td>
             <td onClick={() => chooseOrder(order)}>{nameOrder.join(',')}</td>
             <td onClick={() => chooseOrder(order)}>{formatCurrency(total)}</td>
             <td onClick={() => chooseOrder(order)}>

@@ -3,7 +3,7 @@ import { FoodDef } from '../../food/types/food.type';
 
 export type OrderDef = {
   food: FoodDef | null;
-  amount: number | null;
+  amount: number;
   note?: string;
 };
 
@@ -15,6 +15,7 @@ export type InitialStateDef = {
   error: boolean;
   address: string;
   phonenumber: number;
+  fullname?:string;
   user_id: string;
 };
 
@@ -33,6 +34,7 @@ export type OrderDetailDef = {
   status: enumOrder;
   user: UserDef;
   isChecked?: boolean;
+  fullname?:string;
 };
 
 export type OrderUpdateDef = {

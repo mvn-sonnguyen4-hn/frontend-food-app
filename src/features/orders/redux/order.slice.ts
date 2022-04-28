@@ -94,7 +94,8 @@ const orderSlice = createSlice({
       if (!action.payload.amount) {
         state.listOrder[action.payload.position].amount = 0;
       }
-      state.listOrder[action.payload.position].amount = action.payload.amount;
+      state.listOrder[action.payload.position].amount =
+        action.payload.amount < 1 ? 1 : action.payload.amount;
     },
     changeNoteOrder(
       state,

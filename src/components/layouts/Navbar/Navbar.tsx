@@ -4,6 +4,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import styles from './Navbar.module.scss';
 import { useAppDispatch, useAppSelector } from '@app/redux/store';
 import { logout } from '@app/features/auth/auth';
+import { AUTH_ROLE } from '@app/constants/auth.constants';
 
 interface NavbarProps {
   children: ReactNode;
@@ -49,22 +50,27 @@ const Navbar = memo(({ children }: NavbarProps) => {
             <span className="material-icons-outlined">home</span>
           </div>
         </NavLink>
-        <NavLink
-          to="/order"
-          className={({ isActive }) => (isActive ? styles.active : '')}
-        >
-          <div className={styles.box}>
-            <span className="material-icons-outlined">bookmark_added</span>
-          </div>
-        </NavLink>
-        <NavLink
-          to="/settings"
-          className={({ isActive }) => (isActive ? styles.active : '')}
-        >
-          <div className={styles.box}>
-            <span className="material-icons-outlined">settings</span>
-          </div>
-        </NavLink>
+        {user &&
+          (user?.role === AUTH_ROLE.ADMIN || user?.role === AUTH_ROLE.USER) && (
+            <NavLink
+              to="/order"
+              className={({ isActive }) => (isActive ? styles.active : '')}
+            >
+              <div className={styles.box}>
+                <span className="material-icons-outlined">bookmark_added</span>
+              </div>
+            </NavLink>
+          )}
+        {user && user.role === AUTH_ROLE.ADMIN && (
+          <NavLink
+            to="/settings"
+            className={({ isActive }) => (isActive ? styles.active : '')}
+          >
+            <div className={styles.box}>
+              <span className="material-icons-outlined">settings</span>
+            </div>
+          </NavLink>
+        )}
         <div className="absolute bottom-8 left-[50%] translate-x-[-50%] icon-user">
           {user && user.avatar_url ? (
             <div
@@ -91,7 +97,10 @@ const Navbar = memo(({ children }: NavbarProps) => {
             <ul className="bg-dark-second rounded-xl px-5 py-3">
               {user ? (
                 <>
-                  <li className="flex items-center mb-3 hover:text-white cursor-pointer">
+                  <li
+                    className="flex items-center mb-3 hover:text-white cursor-pointer"
+                    onClick={() => navigate('/user/settings')}
+                  >
                     <span className="material-icons-outlined mr-2">
                       manage_accounts
                     </span>

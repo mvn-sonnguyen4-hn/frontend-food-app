@@ -10,16 +10,14 @@ import styles from './OrderSidebar.module.scss';
 import LoadingSpinner from '@app/components/atoms/LoadingSpinner/LoadingSpinner';
 import { formatCurrency } from '@app/utils/functions';
 import {
-  uploadOrders,
   removeOrder,
   changeStatusOrder,
   updateOrders
-  // removeOrders
 } from '../../redux/order.slice';
-import { changeAdress, changePhonenumber } from '@app/features/auth/auth';
 import CustomSelect from '@app/components/atoms/CustomSelect/CustomSelect';
 import { dataSelectStatus } from '@app/constants/selectbox.constants';
 import { CustomSelectProps } from '@app/types/atom.type';
+import { useNavigate } from 'react-router';
 
 interface IPropsListOrders {
   closeModalAndNotify: Function;
@@ -35,72 +33,7 @@ function OrderSidebar({
   const user = useAppSelector(state => state.auth.user);
   const orderStore = useAppSelector(state => state.order);
   const [isLoading, setIsLoading] = useState(false);
-
-  const handleCreateOrders = async () => {
-    if (!listOrders.length) {
-      return;
-    }
-    setIsLoading(true);
-    const result = await dispatch(
-      uploadOrders({
-        listFood: listOrders,
-        address: user?.address ?? '',
-        phonenumber: user?.phonenumber ?? 0,
-        user_id: user?._id ?? ''
-      })
-    );
-    if (uploadOrders.fulfilled.match(result)) {
-      setIsLoading(false);
-      closeModalAndNotify(true);
-    } else {
-      closeModalAndNotify();
-    }
-  };
-  const total = useMemo(() => {
-    return listOrders.reduce((total, item) => {
-      return total + (item.amount ?? 0) * (item.food?.price ?? 0);
-    }, 0);
-  }, [listOrders]);
-  const changeAmount = (e: ChangeEvent<HTMLInputElement>, index: number) => {
-    dispatch(
-      changeAmountOrder({
-        amount: Number(e.target.value) < 1 ? 0 : Number(e.target.value),
-        position: index
-      })
-    );
-  };
-  const changeNote = (e: ChangeEvent<HTMLInputElement>, index: number) => {
-    dispatch(changeNoteOrder({ note: e.target.value, position: index }));
-  };
-  const onChangeSelect = (item: CustomSelectProps) => {
-    dispatch(changeStatusOrder(item.title));
-  };
-  const save = async () => {
-    if (!listOrders.length) {
-      return;
-    }
-    setIsLoading(true);
-    const foods = listOrders.map(item => {
-      return {
-        food: item.food?._id ?? '',
-        amount: item.amount ?? 0,
-        note: item.note ?? ''
-      };
-    });
-    const data = {
-      listFood: foods,
-      _id: orderStore._id,
-      status: orderStore.status
-    };
-    const result = await dispatch(updateOrders(data));
-    if (updateOrders.fulfilled.match(result)) {
-      setIsLoading(false);
-      closeModalAndNotify(true);
-    } else {
-      setIsLoading(false);
-      closeModalAndNotify();
-    }
-  };
+  const navigate = useNavigate();
 
   // render list
   const renderListOrders = () => {
@@ -167,18 +100,58 @@ function OrderSidebar({
     });
     return result;
   };
+
+  const total = useMemo(() => {
+    return listOrders.reduce((total, item) => {
+      return total + (item.amount ?? 0) * (item.food?.price ?? 0);
+    }, 0);
+  }, [listOrders]);
+
+  const changeAmount = (e: ChangeEvent<HTMLInputElement>, index: number) => {
+    dispatch(
+      changeAmountOrder({
+        amount: Number(e.target.value) < 1 ? 0 : Number(e.target.value),
+        position: index
+      })
+    );
+  };
+  const changeNote = (e: ChangeEvent<HTMLInputElement>, index: number) => {
+    dispatch(changeNoteOrder({ note: e.target.value, position: index }));
+  };
+  const onChangeSelect = (item: CustomSelectProps) => {
+    dispatch(changeStatusOrder(item.title));
+  };
   const deleteOrder = (index: number) => {
     dispatch(removeOrder(index));
   };
-  // const handleRemoveOrders = () => {
-  // dispatch(removeOrders(['']));
-  // }
-  const onChangeAddress = (e: ChangeEvent<HTMLInputElement>) => {
-    dispatch(changeAdress({ address: e.target.value }));
+
+  const save = async () => {
+    if (!listOrders.length) {
+      return;
+    }
+    setIsLoading(true);
+    const foods = listOrders.map(item => {
+      return {
+        food: item.food?._id ?? '',
+        amount: item.amount ?? 0,
+        note: item.note ?? ''
+      };
+    });
+    const data = {
+      listFood: foods,
+      _id: orderStore._id,
+      status: orderStore.status
+    };
+    const result = await dispatch(updateOrders(data));
+    if (updateOrders.fulfilled.match(result)) {
+      setIsLoading(false);
+      closeModalAndNotify(true);
+    } else {
+      setIsLoading(false);
+      closeModalAndNotify();
+    }
   };
-  const onChangePhonenumber = (e: ChangeEvent<HTMLInputElement>) => {
-    dispatch(changePhonenumber({ phonenumber: Number(e.target.value) }));
-  };
+
   return (
     <div>
       <div className="text-white">
@@ -194,7 +167,7 @@ function OrderSidebar({
             />
           )}
         </div>
-        <div className="max-h-[500px] overflow-y-auto custom-scrollbar">
+        <div className="max-h-[70vh] overflow-y-auto custom-scrollbar">
           <table className="w-full">
             <thead>
               <tr className={cx(styles.divider)}>
@@ -219,16 +192,6 @@ function OrderSidebar({
             </tbody>
           </table>
         </div>
-        <div className="mt-5">
-          <p>Address</p>
-          <FormInput value={user?.address} onChange={e => onChangeAddress(e)} />
-          <p className="mt-3">Phonenumber:</p>
-          <FormInput
-            value={user?.phonenumber}
-            type="number"
-            onChange={e => onChangePhonenumber(e)}
-          />
-        </div>
         {!isEdit ? (
           <button
             className={`btn-primary w-full py-3 mt-7 flex-center outline-none border-none ${
@@ -236,7 +199,7 @@ function OrderSidebar({
                 ? 'opacity-50 pointer-events-none'
                 : ''
             }`}
-            onClick={handleCreateOrders}
+            onClick={() => navigate('/checkout')}
           >
             {isLoading && <LoadingSpinner size={20} />}
             <span className="ml-1">Create order</span>

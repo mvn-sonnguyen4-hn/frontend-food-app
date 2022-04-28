@@ -28,15 +28,15 @@ export type RegisterRequestDef = {
 };
 
 export type UserDef = {
-  _id: string;
-  first_name: string;
-  last_name: string;
-  username: string;
+  _id?: string;
+  first_name?: string;
+  last_name?: string;
+  username?: string;
   avatar_url?: string;
-  email: string;
+  email?: string;
   address: string;
   phonenumber: number;
-  role: RoleDef;
+  role?: RoleDef;
 };
 
 export interface InitialStateDef {

@@ -81,11 +81,35 @@ const authSlice = createSlice({
     changeAdress(state, data: PayloadAction<{ address: string }>) {
       if (state.user) {
         state.user.address = data.payload.address;
+      } else {
+        state.user = {
+          address: '',
+          phonenumber: 0
+        };
+        state.user.address = data.payload.address;
       }
     },
     changePhonenumber(state, data: PayloadAction<{ phonenumber: number }>) {
       if (state.user) {
         state.user.phonenumber = data.payload.phonenumber;
+      } else {
+        state.user = {
+          address: '',
+          phonenumber: 0
+        };
+        state.user.phonenumber = data.payload.phonenumber;
+      }
+    },
+    changeFullname(state, data: PayloadAction<{ name: string }>) {
+      if (state.user) {
+        state.user.first_name = data.payload.name;
+      } else {
+        state.user = {
+          address: '',
+          first_name: '',
+          phonenumber: 0
+        };
+        state.user.first_name = data.payload.name;
       }
     }
   },
@@ -236,6 +260,7 @@ const authSlice = createSlice({
   }
 });
 
-export const { logout, changeAdress, changePhonenumber } = authSlice.actions;
+export const { logout, changeAdress, changePhonenumber, changeFullname } =
+  authSlice.actions;
 
 export const authReducer = authSlice.reducer;
