@@ -13,7 +13,6 @@ import Toastify from '@app/components/atoms/Toastify/Toastify';
 import { enumToastify } from '@app/types/atom.type';
 import Pagination from '@app/components/atoms/Pagination/Pagination';
 import { useAppSelector } from '@app/redux/store';
-import useFirebase from '@app/hooks/useFirebase';
 
 function Home() {
   const orders = useAppSelector(state => state.order.listOrder);
@@ -41,8 +40,6 @@ function Home() {
     total: 1
   });
 
-  const data = useFirebase('messages');
-  console.log('test', data);
   //handle pagination
   useEffect(() => {
     setIsLoading(true);
@@ -123,7 +120,9 @@ function Home() {
     <div className="bg-dark min-h-[100vh] text-white pt-8 px-14">
       <div className="flex items-end justify-between">
         <div>
-          <p className="text-3xl">Jaegar Resto</p>
+          <p className="text-3xl">
+            Jaegar Resto
+          </p>
           <p className="mb-6 mt-1">Tuesday, 2 Feb 2021</p>
         </div>
         <form onSubmit={handleSearch}>
