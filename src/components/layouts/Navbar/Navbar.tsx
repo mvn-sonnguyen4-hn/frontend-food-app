@@ -5,7 +5,7 @@ import styles from './Navbar.module.scss';
 import { useAppDispatch, useAppSelector } from '@app/redux/store';
 import { logout } from '@app/features/auth/auth';
 import { AUTH_ROLE } from '@app/constants/auth.constants';
-
+import { ENV } from '@app/constants/env';
 interface NavbarProps {
   children: ReactNode;
 }
@@ -129,6 +129,12 @@ const Navbar = memo(({ children }: NavbarProps) => {
         )}
       </nav>
       <div className="ml-[6.5rem]">{children}</div>
+      <div className="bg-white fixed bottom-10 right-10 rounded-full w-[3.5rem] h-[3.5rem] flex-center cursor-pointer">
+        <img src={ENV.URL_IMAGE_DEFAULT} alt="" className="cursor-pointer" />
+        <span className="absolute right-[-0.5rem] top-0 w-[1.5rem] h-[1.5rem] rounded-full bg-primary flex-center text-white">
+          1
+        </span>
+      </div>
     </div>
   );
 });

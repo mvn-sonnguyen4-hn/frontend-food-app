@@ -15,7 +15,7 @@ export type InitialStateDef = {
   error: boolean;
   address: string;
   phonenumber: number;
-  fullname?:string;
+  fullname?: string;
   user_id: string;
 };
 
@@ -34,7 +34,7 @@ export type OrderDetailDef = {
   status: enumOrder;
   user: UserDef;
   isChecked?: boolean;
-  fullname?:string;
+  fullname?: string;
 };
 
 export type OrderUpdateDef = {

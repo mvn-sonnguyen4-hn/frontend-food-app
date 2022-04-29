@@ -13,6 +13,7 @@ import Toastify from '@app/components/atoms/Toastify/Toastify';
 import { enumToastify } from '@app/types/atom.type';
 import Pagination from '@app/components/atoms/Pagination/Pagination';
 import { useAppSelector } from '@app/redux/store';
+import useFirebase from '@app/hooks/useFirebase';
 
 function Home() {
   const orders = useAppSelector(state => state.order.listOrder);
@@ -40,6 +41,8 @@ function Home() {
     total: 1
   });
 
+  const data = useFirebase('messages');
+  console.log('test', data);
   //handle pagination
   useEffect(() => {
     setIsLoading(true);

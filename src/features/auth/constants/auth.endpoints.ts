@@ -6,5 +6,6 @@ export enum AuthEndpointsEnum {
   USERS = 'users',
   REGISTER = 'auth/register',
   AUTO_LOGIN = 'auth/auto-login',
-  UPDATE = 'auth/update'
+  UPDATE = 'auth/update',
+  GET_ADMIN = 'getAdmin'
 }

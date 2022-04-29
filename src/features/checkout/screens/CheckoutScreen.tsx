@@ -2,10 +2,7 @@ import FormInput from '@app/components/atoms/FormInput/FormInput';
 import LoadingSpinner from '@app/components/atoms/LoadingSpinner/LoadingSpinner';
 import Toastify from '@app/components/atoms/Toastify/Toastify';
 import { dataInput } from '@app/constants/validation.constanst';
-import {
-  changeAmountOrder,
-  uploadOrders
-} from '@app/features/orders/orders';
+import { changeAmountOrder, uploadOrders } from '@app/features/orders/orders';
 import { useAppDispatch, useAppSelector } from '@app/redux/store';
 import { enumToastify } from '@app/types/atom.type';
 import { formatCurrency } from '@app/utils/functions';
@@ -142,16 +139,16 @@ const CheckoutScreen = () => {
 
   const onSubmit = async (data: any) => {
     if (!orders.length) {
-        return ;
+      return;
     }
     setIsLoading(true);
     const result = await dispatch(
       uploadOrders({
         listFood: orders,
-        address: data.address ,
+        address: data.address,
         fullname: data.first_name + ' ' + data.last_name,
         phonenumber: data.phonenumber ?? 0,
-        user_id: data._id 
+        user_id: data._id
       })
     );
     if (uploadOrders.fulfilled.match(result)) {

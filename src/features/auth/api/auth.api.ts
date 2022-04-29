@@ -19,3 +19,7 @@ export const updateUser = (data: any): Promise<AxiosResponse> => {
     headers: { 'content-type': 'multipart/form-data' }
   });
 };
+
+export const getAdmin = (): Promise<AxiosResponse> => {
+  return api.get(AuthEndpointsEnum.GET_ADMIN);
+};

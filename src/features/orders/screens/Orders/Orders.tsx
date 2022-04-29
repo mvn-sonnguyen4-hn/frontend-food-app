@@ -179,7 +179,9 @@ const Orders = () => {
                 />
               </div>
             </td>
-            <td onClick={() => chooseOrder(order)}>{order.user?order.user.username:order.fullname}</td>
+            <td onClick={() => chooseOrder(order)}>
+              {order.user ? order.user.username : order.fullname}
+            </td>
             <td onClick={() => chooseOrder(order)}>{nameOrder.join(',')}</td>
             <td onClick={() => chooseOrder(order)}>{formatCurrency(total)}</td>
             <td onClick={() => chooseOrder(order)}>
