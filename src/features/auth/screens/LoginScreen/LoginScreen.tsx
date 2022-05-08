@@ -224,7 +224,7 @@ function LoginScreen() {
         <p className="my-5 bg-[#393C49] w-full h-[1px]" />
         <button
           className={`btn-primary w-full text-white text-center bg-primary py-[14px] rounded-lg text-sm flex-center ${
-            !formState.isValid ? 'disabl23' : ''
+            !formState.isValid ? 'disable' : ''
           }`}
           type="submit"
         >

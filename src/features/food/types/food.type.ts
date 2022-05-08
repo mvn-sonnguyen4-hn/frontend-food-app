@@ -11,3 +11,9 @@ export type FoodResponse = {
   page: number;
   totalPage: number;
 };
+export type FoodRequest = {
+  category_id: string;
+  name: string;
+  price: number;
+  file: any;
+};

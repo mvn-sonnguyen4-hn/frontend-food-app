@@ -1,4 +1,5 @@
 import { db } from '@app/api/firebase';
+import { COLLECTION_DB_CHAT } from '@app/constants/db.constants';
 import {
   collection,
   getDocs,
@@ -15,7 +16,7 @@ export async function getDBFirebase(collection_name: string) {
 }
 
 export const unsub = onSnapshot(
-  doc(db, 'messages', 'SF'),
+  doc(db, COLLECTION_DB_CHAT, 'SF'),
   { includeMetadataChanges: true },
   doc => {
     const source = doc.metadata.hasPendingWrites ? 'Local' : 'Server';

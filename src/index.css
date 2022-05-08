@@ -40,4 +40,10 @@ body {
     background: #1f1d2b;
     padding: 14px 0;
   }
+  .border-solid-gray {
+    border: 1px solid #393c49;
+  }
+  .border-dashed-primary {
+    border: 1px dashed theme('colors.primary');
+  }
 }

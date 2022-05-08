@@ -65,6 +65,12 @@ export const api = axios.create({
   baseURL: ENV.API_HOST,
   headers: { 'Content-Type': 'application/json' }
 });
-
+export const apiForm = axios.create({
+  baseURL: ENV.API_HOST,
+  headers: { 'Content-Type': 'multipart/form-data' }
+});
 api.interceptors.request.use(authInterceptor);
 api.interceptors.response.use(responseInterceptor);
+
+apiForm.interceptors.request.use(authInterceptor);
+apiForm.interceptors.response.use(responseInterceptor);

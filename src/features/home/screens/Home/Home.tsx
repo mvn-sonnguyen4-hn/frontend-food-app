@@ -16,6 +16,7 @@ import { useAppSelector } from '@app/redux/store';
 
 function Home() {
   const orders = useAppSelector(state => state.order.listOrder);
+  const categories = useAppSelector(state => state.category.categories);
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
   const navigate = useNavigate();
@@ -42,28 +43,30 @@ function Home() {
 
   //handle pagination
   useEffect(() => {
-    setIsLoading(true);
-    setListFood({
-      data: [],
-      totalPage: 0,
-      page: 0,
-      limit: 0
-    });
-    const page = searchParams.get('page') || 1;
-    const type = searchParams.get('type') || '';
-    const keyword = searchParams.get('keyword') || '';
-    getFoodByPaginationAndCategoryType(Number(page), type, keyword)
-      .then(res => {
-        setIsLoading(false);
-        setListFood(res.data);
-        setPaginate({
-          current: Number(res.data.page),
-          total: Number(res.data.totalPage)
-        });
-      })
-      .catch(() => {
-        setIsLoading(false);
+    if (categories[0] && categories[0].name) {
+      setIsLoading(true);
+      setListFood({
+        data: [],
+        totalPage: 0,
+        page: 0,
+        limit: 0
       });
+      const page = searchParams.get('page') || 1;
+      const type = searchParams.get('type') || categories[0].name;
+      const keyword = searchParams.get('keyword') || '';
+      getFoodByPaginationAndCategoryType(Number(page), type, keyword)
+        .then(res => {
+          setIsLoading(false);
+          setListFood(res.data);
+          setPaginate({
+            current: Number(res.data.page),
+            total: Number(res.data.totalPage)
+          });
+        })
+        .catch(() => {
+          setIsLoading(false);
+        });
+    }
   }, [location]);
 
   // render list food
@@ -120,9 +123,7 @@ function Home() {
     <div className="bg-dark min-h-[100vh] text-white pt-8 px-14">
       <div className="flex items-end justify-between">
         <div>
-          <p className="text-3xl">
-            Jaegar Resto
-          </p>
+          <p className="text-3xl">Jaegar Resto</p>
           <p className="mb-6 mt-1">Tuesday, 2 Feb 2021</p>
         </div>
         <form onSubmit={handleSearch}>

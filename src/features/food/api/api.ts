@@ -1,6 +1,6 @@
 import { FoodResponse } from '@app/features/food/food';
 import { AxiosResponse } from 'axios';
-import { api } from '@app/api/api';
+import { api, apiForm } from '@app/api/api';
 import { FoodndpointsEnum } from '../constants/food.endpoints';
 
 export const getListFood = (): Promise<AxiosResponse<FoodResponse>> =>
@@ -18,8 +18,12 @@ export const getFoodByPaginationAndCategoryType = (
     params: {
       page,
       type,
-      limit: 3,
+      limit: 5,
       keyword
     }
   });
+};
+
+export const addFood = (data: any) => {
+  return apiForm.post(FoodndpointsEnum.CREATE_FOOD, data);
 };

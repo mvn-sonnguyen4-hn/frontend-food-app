@@ -38,7 +38,7 @@ const Pagination = ({
         previousLinkClassName="text-primary leading-[1rem]"
         nextLinkClassName="text-primary leading-[1rem]"
         containerClassName="flex items-center"
-        activeLinkClassName="bg-primary !text-[#fff] rounded-lg"
+        activeLinkClassName="!bg-primary !text-[#fff] rounded-lg"
         pageLinkClassName="text-lg px-[10px] py-1 text-base bg-[#2D303E] mx-2 rounded-lg text-[#889898] border border-[#393C49]"
       />
     </div>

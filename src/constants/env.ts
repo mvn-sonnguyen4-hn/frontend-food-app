@@ -5,7 +5,7 @@ export const ENV = {
   NODE_ENV: process.env.NODE_ENV,
   API_HOST: process.env.REACT_APP_API_HOST ?? '',
   URL_IMAGE_DEFAULT:
-    'https://res.cloudinary.com/monstarlab777/image/upload/v1650964802/user_no_avatar_hxbiyv.png',
+    'https://res.cloudinary.com/monstarlab777/image/upload/v1651456550/1-13_x7rcqz.png',
   API_KEY_FIREBASE: 'AIzaSyATQsqjwLx6sl65VhsDTXE3nirmiqU8_gw',
   AUTH_DOMAIN: 'food-app-71dd2.firebaseapp.com',
   DATABASE_URL:

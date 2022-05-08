@@ -5,8 +5,7 @@ import styles from './Navbar.module.scss';
 import { useAppDispatch, useAppSelector } from '@app/redux/store';
 import { logout } from '@app/features/auth/auth';
 import { AUTH_ROLE } from '@app/constants/auth.constants';
-import { ENV } from '@app/constants/env';
-import useFirebase from '@app/hooks/useFirebase';
+// import Chat from '@app/components/Chat/Chat';
 interface NavbarProps {
   children: ReactNode;
 }
@@ -38,15 +37,6 @@ const Navbar = memo(({ children }: NavbarProps) => {
     navigate('/login');
   };
 
-  const messages=useFirebase({
-    field:'messages',
-    listener_name:'sender_id',
-    listener_value:user?._id
-  })
-  console.log(messages)
-  const renderMessages=()=>{
-    return null;
-  }
   return (
     <div>
       <nav className="flex flex-col pl-3 fixed min-h-[100vh] max-h-[100vh] w-[6.5rem] bg-dark-second pt-6 text-primary text-[26px]">
@@ -140,11 +130,7 @@ const Navbar = memo(({ children }: NavbarProps) => {
         )}
       </nav>
       <div className="ml-[6.5rem]">{children}</div>
-      <div className='bg-white fixed bottom-10 right-10 rounded-full w-[3.5rem] h-[3.5rem] flex-center cursor-pointer'>
-          <img src={ENV.URL_IMAGE_DEFAULT} alt="" className='cursor-pointer' />
-          <span className='absolute right-[-0.5rem] top-0 w-[1.5rem] h-[1.5rem] rounded-full bg-primary flex-center text-white'>1</span>
-      </div>
-      {renderMessages()}
+      {/* <Chat /> */}
     </div>
   );
 });
