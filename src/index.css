@@ -32,6 +32,12 @@ body {
     color: theme('colors.white');
     background: theme('colors.primary');
     padding: 14px 0;
+    outline: none;
+    transition: all 0.2s ease-in-out;
+  }
+  .btn-primary:hover {
+    color: theme('colors.primary');
+    background: #1f1d2b;
   }
   .btn-primary-outline {
     border: 1px solid theme('colors.primary');
@@ -39,7 +45,14 @@ body {
     color: theme('colors.primary');
     background: #1f1d2b;
     padding: 14px 0;
+    outline: none;
+    transition: all 0.2s ease-in-out;
   }
+  .btn-primary-outline:hover {
+    color: theme('colors.white');
+    background: theme('colors.primary');
+  }
+
   .border-solid-gray {
     border: 1px solid #393c49;
   }

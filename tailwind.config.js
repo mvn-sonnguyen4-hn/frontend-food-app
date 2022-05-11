@@ -11,6 +11,7 @@ module.exports = {
         primary: '#ea7c69',
         'red-main':'#9D0505',
         dark: '#252836',
+        'dark-second': '#1f1d2b',
       },
       gridTemplateColumns: {
         192: 'repeat(auto-fill, 12rem)',
