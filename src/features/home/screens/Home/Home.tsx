@@ -54,7 +54,6 @@ function Home() {
       const page = searchParams.get('page') || 1;
       const type = searchParams.get('type') || categories[0].name;
       const keyword = searchParams.get('keyword') || '';
-      console.log('123');
       getFoodByPaginationAndCategoryType(Number(page), type, keyword)
         .then(res => {
           setIsLoading(false);

@@ -42,7 +42,6 @@ function Routes() {
     />
   );
   const navigate = useNavigate();
-  console.log(navigate);
   const renderRoute = (
     Component: ComponentType,
     isProtectedRoute: RouteWrapperConfigDef,
