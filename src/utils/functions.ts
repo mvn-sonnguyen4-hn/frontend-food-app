@@ -26,7 +26,6 @@ export const addMessage = async (
   receiver_id: string,
   message: string
 ) => {
-  console.log('12321');
   try {
     await setDoc(doc(db, COLLECTION_DB_CHAT, id), {
       sender_id,

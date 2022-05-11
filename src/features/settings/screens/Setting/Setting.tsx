@@ -2,13 +2,23 @@ import LoadingSpinner from '@app/components/atoms/LoadingSpinner/LoadingSpinner'
 import Menu from '@app/components/layouts/Menu/Menu';
 import {
   addFood,
+  deleteFood,
+  FoodDef,
   FoodResponse,
-  getFoodByPaginationAndCategoryType
+  getFoodByPaginationAndCategoryType,
+  updateFood
 } from '@app/features/food/food';
-import { useEffect, useRef, useState } from 'react';
+import {
+  ChangeEvent,
+  FormEvent,
+  useEffect,
+  useMemo,
+  useRef,
+  useState
+} from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
 import { formatCurrency } from '@app/utils/functions';
-import { useAppSelector } from '@app/redux/store';
+import { useAppDispatch, useAppSelector } from '@app/redux/store';
 import CustomModal from '@app/components/atoms/Modal/CustomModal';
 import { Controller, useForm } from 'react-hook-form';
 import FormInput from '@app/components/atoms/FormInput/FormInput';
@@ -16,8 +26,40 @@ import CustomSelect from '@app/components/atoms/CustomSelect/CustomSelect';
 import { enumToastify } from '@app/types/atom.type';
 import Toastify from '@app/components/atoms/Toastify/Toastify';
 import Pagination from '@app/components/atoms/Pagination/Pagination';
+import styles from './Setting.module.scss';
+import cx from 'classnames';
+import ReactModal from 'react-modal';
+import { addCategory } from '@app/features/category/api/category.api';
+import { getCategories } from '@app/features/category/redux/category.slice';
+
+// position: 'absolute',
+// top: '50%',
+// left: '50%',
+// transform: 'translate(-50%,-50%)',
+// background: '#1F1D2B',
+// borderRadius: '1rem',
+// width: 'fit-content',
+// height: 'fit-content',
+// border: 'none'
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    background: '#1F1D2B',
+    borderRadius: '1rem',
+    width: 'fit-content',
+    height: 'fit-content',
+    border: 'none'
+  },
+  overlay: {
+    background: 'rgba(0,0,0,0.6)',
+    cursor: 'pointer'
+  }
+};
 
 function Setting() {
+  const dispatch = useAppDispatch();
   const categories = useAppSelector(state => state.category.categories);
   const [showModal, setShowModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -25,6 +67,10 @@ function Setting() {
   const inputImage = useRef<any>();
   const [fileData, setFileData] = useState<any>(null);
   const [isLoadingButton, setIsLoadingButton] = useState(false);
+  const [statusToast, setStatusToast] = useState({
+    type: enumToastify.success,
+    message: 'Thêm thành công'
+  });
   const toastRef = useRef<any>();
   const location = useLocation();
   const [listFood, setListFood] = useState<FoodResponse>({
@@ -37,6 +83,8 @@ function Setting() {
     current: 1,
     total: 1
   });
+  const [isEdit, setIsEdit] = useState(false);
+  const [idFood, setIdFood] = useState('');
   const [searchParams] = useSearchParams();
   useEffect(() => {
     getData();
@@ -56,7 +104,10 @@ function Setting() {
     getFoodByPaginationAndCategoryType(Number(page), type, keyword)
       .then(res => {
         setIsLoading(false);
-        setListFood(res.data);
+        const convertData = res.data.data.map(item => {
+          return { ...item, isChecked: false };
+        });
+        setListFood({ ...res.data, data: convertData });
         setPaginate({
           current: Number(res.data.page),
           total: Number(res.data.totalPage)
@@ -67,12 +118,26 @@ function Setting() {
       });
   };
   const renderFood = () => {
-    const result = listFood.data.map(food => {
+    const result = listFood.data.map((food, index) => {
       return (
         <div
-          className="text-center border-solid-gray rounded-lg"
+          className="text-center border-solid-gray rounded-lg relative"
           key={food._id}
         >
+          <div
+            className={cx(
+              'absolute top-3 left-3 cursor-pointer',
+              styles.checkbox,
+              food.isChecked ? styles.checked : ''
+            )}
+            onClick={() => checkedFood(index)}
+          >
+            {food.isChecked && (
+              <span className="material-icons-outlined text-dark-second">
+                done
+              </span>
+            )}
+          </div>
           <div className="mb-3 flex-center mt-6">
             <img
               className="w-[130px] h-[130px] rounded-full object-cover"
@@ -84,7 +149,10 @@ function Setting() {
           <p className="mb-4 mt-2 text-[#ABBBC2]">
             {formatCurrency(food.price)}
           </p>
-          <button className="flex-center w-full bg-[#50343A] text-[#EA7C69] py-4 rounded-b-lg cursor-pointer">
+          <button
+            className="flex-center w-full bg-[#50343A] text-[#EA7C69] py-4 rounded-b-lg cursor-pointer"
+            onClick={() => editFood(food)}
+          >
             <span className="material-icons-outlined">edit</span>Sửa món ăn
           </button>
         </div>
@@ -93,7 +161,7 @@ function Setting() {
     return result;
   };
 
-  const { handleSubmit, formState, control } = useForm<any>({
+  const { handleSubmit, formState, control, setValue } = useForm<any>({
     mode: 'onChange'
   });
   const [category, setCategory] = useState<any>({
@@ -115,32 +183,195 @@ function Setting() {
     formData.append('name', data.food_name);
     formData.append('price', data.food_price);
     formData.append('category_id', category.value);
-    formData.append('file', fileData.target.files[0]);
-    const result = await addFood(formData);
+    if (fileData) {
+      if (isEdit) {
+        formData.append('recfile', fileData.target.files[0]);
+      } else {
+        formData.append('file', fileData.target.files[0]);
+      }
+    } else {
+      formData.append('url_img', urlImage);
+    }
+    let result;
+    if (isEdit) {
+      result = await updateFood(idFood, formData);
+    } else {
+      result = await addFood(formData);
+    }
     if (result) {
       closeModal();
-      setStatusToast({
-        type: enumToastify.success,
-        message: 'Thêm món ăn thành công'
-      });
+      showToast(`${isEdit ? 'Cập nhật' : 'Thêm'} món ăn thành công`);
+      setUrlImage('');
+      setFileData(null);
     } else {
       closeModal();
-      setStatusToast({
-        type: enumToastify.error,
-        message: 'Thêm món ăn thất bại'
-      });
+      showToast(`${isEdit ? 'Cập nhật' : 'Thêm'} món ăn thất bại`, true);
+      setUrlImage('');
+      setFileData(null);
     }
     toastRef.current.showToast();
     getData();
     setIsLoadingButton(false);
   };
 
-  const [statusToast, setStatusToast] = useState({
-    type: enumToastify.success,
-    message: 'Thêm thành công'
-  });
   const closeModal = () => {
     setShowModal(false);
+    setIsEdit(false);
+    setUrlImage('');
+    setFileData(null);
+    setCategory({
+      title: categories.length > 0 ? categories[0].name : '',
+      value: categories.length > 0 ? categories[0]._id : ''
+    });
+    setValue('food_name', '');
+    setValue('food_price', '');
+    setUrlImage('');
+  };
+  // edit
+  const editFood = (food: FoodDef) => {
+    setIdFood(food._id);
+    setIsEdit(true);
+    const category = categories.find(
+      category => category._id === food.category
+    );
+    setCategory({
+      title: category?.name,
+      value: category?._id
+    });
+    setValue('food_name', food.name);
+    setValue('food_price', food.price);
+    setUrlImage(food.url_img);
+    setShowModal(true);
+  };
+
+  // checkbox
+  const checkedFood = (index: number) => {
+    const dummyList = [...listFood.data];
+    dummyList[index].isChecked = !dummyList[index].isChecked;
+    setListFood({ ...listFood, data: dummyList });
+  };
+  const [showModalDelete, setShowModalDelete] = useState(false);
+  const openModalDelete = () => {
+    setShowModalDelete(true);
+  };
+  const closeModalDelete = () => {
+    setShowModalDelete(false);
+  };
+  const handleDeleteFood = () => {
+    const ids = listFood.data
+      .filter(item => item.isChecked)
+      .map(food => food._id);
+    if (!ids.length) {
+      return;
+    }
+    setIsLoading(true);
+    deleteFood(ids)
+      .then(() => {
+        setIsLoading(false);
+        closeModalDelete();
+        getData();
+        showToast(`Xóa món ăn thành công`);
+      })
+      .catch(() => {
+        setIsLoading(false);
+        closeModalDelete();
+        showToast(`Xóa món ăn thất bại`, true);
+      });
+  };
+
+  const showToast = (message: string, err = false) => {
+    if (!err) {
+      setStatusToast({
+        type: enumToastify.success,
+        message
+      });
+      toastRef.current.showToast();
+    } else {
+      setStatusToast({
+        type: enumToastify.error,
+        message
+      });
+      toastRef.current.showToast();
+    }
+  };
+  //categories
+  const [showModalCategory, setShowModalCategory] = useState(false);
+  const [showModalAddCategory, setShowModalAddCategory] = useState(false);
+  const [categoryName, setCategoryName] = useState('');
+  const listCategories = useMemo(() => {
+    return categories.map(item => {
+      return {
+        ...item,
+        isEdit: false
+      };
+    });
+  }, [categories]);
+  useEffect(() => {
+    setDummyCategories(listCategories);
+  }, [categories]);
+
+  const [dummyCategories, setDummyCategories] = useState(listCategories);
+  const closeModalCategory = () => {
+    setShowModalCategory(false);
+  };
+  const changeCategoryName = (
+    e: ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    const listFakeCategories = [...dummyCategories];
+    listFakeCategories[index].name = e.target.value;
+    setDummyCategories(listFakeCategories);
+  };
+  const editCategoryName = (index: number) => {
+    const listFakeCategories = [...dummyCategories];
+    listFakeCategories[index].isEdit = true;
+    setDummyCategories(listFakeCategories);
+  };
+  const renderCategories = () => {
+    if (!dummyCategories.length) {
+      return null;
+    }
+    const result = dummyCategories.map((category, index) => {
+      return (
+        <div className="min-w-[30rem] flex mb-4" key={index}>
+          <FormInput
+            value={category.name}
+            disabled={!category.isEdit}
+            onChange={e => changeCategoryName(e, index)}
+          />
+          <button className="flex-center btn-primary-outline p-3 mx-3">
+            <span className="material-icons-outlined">delete</span>
+          </button>
+          <button
+            className="flex-center btn-primary-outline p-3"
+            onClick={() => editCategoryName(index)}
+          >
+            <span className="material-icons-outlined">
+              {!category.isEdit ? 'edit' : 'done'}
+            </span>
+          </button>
+        </div>
+      );
+    });
+    return result;
+  };
+  //delete category
+  const closeModalAddCategory = () => {
+    setShowModalAddCategory(false);
+  };
+  const handleAddCategory = async (e: FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    const result = await addCategory(categoryName);
+    if (result) {
+      closeModalAddCategory();
+      showToast(`Thêm thể loại thành công`);
+      dispatch(getCategories());
+    } else {
+      showToast(`Thêm thể loại thất bại`, true);
+    }
+    setCategoryName('');
+    setIsLoading(false);
   };
   return (
     <div className="bg-dark min-h-[100vh] text-white px-8">
@@ -149,11 +380,17 @@ function Setting() {
         <div className="flex justify-between items-center mb-8z">
           <p className="text-2xl">Quản lý thực đơn</p>
           <div className="flex">
-            <button className="flex px-2 py-1 bg-[#9D0505] rounded-lg mr-4">
+            <button
+              className="flex px-2 py-1 bg-[#9D0505] rounded-lg mr-4"
+              onClick={openModalDelete}
+            >
               <span className="material-icons-outlined">delete</span>
               Xóa món ăn
             </button>
-            <button className="flex px-2 py-1 border-solid-gray rounded-lg">
+            <button
+              className="flex px-2 py-1 border-solid-gray rounded-lg"
+              onClick={() => setShowModalCategory(true)}
+            >
               <span className="material-icons-outlined">category</span>
               <span>Quản lý thể loại</span>
             </button>
@@ -178,7 +415,9 @@ function Setting() {
         </div>
       </div>
       <CustomModal isShow={showModal} closeModal={closeModal}>
-        <p className="font-semibold text-3xl text-white mt-16">Thêm sản phẩm</p>
+        <p className="font-semibold text-3xl text-white mt-16">
+          {isEdit ? 'Cập nhật' : 'Thêm'} sản phẩm
+        </p>
         <p className="h-[1px] w-full bg-[#393C49] mt-8 mb-5"></p>
         <form onSubmit={handleSubmit(onSubmit)} className="text-white">
           <p className="mb-1">Thể loại:</p>
@@ -204,9 +443,13 @@ function Setting() {
             rules={{
               required: 'Tên món ăn không được để trống.'
             }}
-            render={({ field: { onChange, name }, fieldState: { error } }) => (
+            render={({
+              field: { onChange, name, value },
+              fieldState: { error }
+            }) => (
               <FormInput
                 name={name}
+                value={value}
                 error={error?.message}
                 onChange={onChange}
                 type="text"
@@ -224,12 +467,16 @@ function Setting() {
                 message: 'Giá phải là một số nguyên lớn hơn 0.'
               }
             }}
-            render={({ field: { onChange, name }, fieldState: { error } }) => (
+            render={({
+              field: { onChange, name, value },
+              fieldState: { error }
+            }) => (
               <FormInput
                 name={name}
                 error={error?.message}
                 onChange={onChange}
                 type="number"
+                value={value}
               />
             )}
           />
@@ -268,17 +515,108 @@ function Setting() {
               type="submit"
               disabled={!formState.isValid}
               className={`btn-primary flex-center flex-1 ${
-                !formState.isValid || !fileData || !category.value
+                !formState.isValid || (!fileData && !isEdit) || !category.value
                   ? 'opacity-50 pointer-events-none'
                   : ''
               }`}
             >
               {isLoadingButton && <LoadingSpinner size={20} />}
-              Tạo
+              {isEdit ? 'Cập nhật' : 'Thêm'}
             </button>
           </div>
         </form>
       </CustomModal>
+
+      {/* Delete food */}
+      <ReactModal
+        onRequestClose={closeModalDelete}
+        isOpen={showModalDelete}
+        shouldCloseOnOverlayClick
+        style={customStyles}
+      >
+        <div className="text-white px-6">
+          <p className="text-3xl mb-8 mt-3">Xác nhận xóa</p>
+          <p>
+            Bạn chắc chắn muốn xóa{' '}
+            {listFood.data.filter(item => item.isChecked).length} món ăn này chứ
+            ?
+          </p>
+          <div className="mt-10 mb-7 flex justify-end">
+            <button
+              className="btn-primary-outline w-[100px] mr-3"
+              onClick={closeModalDelete}
+            >
+              Hủy bỏ
+            </button>
+            <button
+              className="flex-center btn-primary w-[100px]"
+              onClick={handleDeleteFood}
+            >
+              {isLoading && <LoadingSpinner size={20} />}
+              Xóa
+            </button>
+          </div>
+        </div>
+      </ReactModal>
+      {/* End delete food */}
+
+      {/* Categories */}
+      <ReactModal
+        onRequestClose={closeModalCategory}
+        isOpen={showModalCategory}
+        shouldCloseOnOverlayClick
+        style={customStyles}
+      >
+        <div className="text-white">
+          <div className="flex items-center mb-8">
+            <p className="text-3xl mr-5">Thể loại</p>
+            <button
+              className="flex-center btn-primary-outline p-3"
+              onClick={() => setShowModalAddCategory(true)}
+            >
+              <span className="material-icons-outlined">add</span>
+            </button>
+          </div>
+          <div>{renderCategories()}</div>
+        </div>
+      </ReactModal>
+      {/* Add */}
+      <ReactModal
+        onRequestClose={closeModalAddCategory}
+        isOpen={showModalAddCategory}
+        shouldCloseOnOverlayClick
+        style={customStyles}
+      >
+        <form onSubmit={handleAddCategory}>
+          <div className="text-white">
+            <p className="text-3xl mb-6">Tạo thể loại</p>
+            <p className="mb-2">Tên thể loại:</p>
+            <div className="min-w-[20rem]">
+              <FormInput
+                value={categoryName}
+                onChange={e => setCategoryName(e.target.value)}
+              />
+            </div>
+            <div className="h-[2px] w-full bg-dark mt-4 mb-6"></div>
+            <div className="flex gap-4">
+              <button
+                type="button"
+                className="w-full btn-primary-outline flex-center"
+                onClick={closeModalAddCategory}
+              >
+                Hủy bỏ
+              </button>
+              <button type="submit" className="w-full btn-primary flex-center">
+                {isLoading ? <LoadingSpinner size={20} /> : <span>Tạo</span>}
+              </button>
+            </div>
+          </div>
+        </form>
+      </ReactModal>
+      {/* End add */}
+
+      {/* End categories */}
+
       <Toastify
         type={statusToast.type}
         message={statusToast.message}

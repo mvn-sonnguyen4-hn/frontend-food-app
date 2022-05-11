@@ -4,6 +4,8 @@ export type FoodDef = {
   price: number;
   url_img: string;
   avaiable: number;
+  category?: string;
+  isChecked?: boolean;
 };
 export type FoodResponse = {
   data: FoodDef[];

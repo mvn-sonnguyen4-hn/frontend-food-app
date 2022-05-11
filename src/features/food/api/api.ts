@@ -27,3 +27,13 @@ export const getFoodByPaginationAndCategoryType = (
 export const addFood = (data: any) => {
   return apiForm.post(FoodndpointsEnum.CREATE_FOOD, data);
 };
+
+export const updateFood = (id: string, data: any) => {
+  return apiForm.put(`${FoodndpointsEnum.UPDATE_FOOD}/${id}`, data);
+};
+
+export const deleteFood = (ids: string[]) => {
+  return api.delete(`${FoodndpointsEnum.DELETE_FOOD}`, {
+    data: { ids }
+  });
+};
