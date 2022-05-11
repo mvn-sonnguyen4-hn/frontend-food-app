@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useAppSelector } from '@app/redux/store';
 import useFirebase from '@app/hooks/useFirebase';
 import { MessageDef } from '@app/types/atom.type';
+import { io } from 'socket.io-client';
 
 function Chat() {
   const [isShowBoxChat, setIsShowBoxChat] = useState(false);
@@ -23,6 +24,7 @@ function Chat() {
     }
   }, [user?._id, messagesCollection]);
   const inputChat = useRef<any>();
+  const socket = useRef<any>();
 
   function auto_grow() {
     inputChat.current.style = '10px';
@@ -71,13 +73,31 @@ function Chat() {
     return result;
   };
   const messagesRef = useRef<any>();
+  const [arrivalMessage, setArrivalMessage] = useState({
+    sender: '',
+    text: '',
+    createdAt: ''
+  });
+
   useEffect(() => {
     // scroll to bottom after message changed
     if (messagesRef?.current) {
       messagesRef.current.scrollTop = messagesRef.current.scrollHeight + 50;
       inputChat.current.style = '10px';
     }
-  }, [messages, isShowBoxChat]);
+    socket.current = io(ENV.HOST_SOCKET);
+    socket.current.on('getMessage', (data: any) => {
+      setMessages(prev => [
+        ...prev,
+        {
+          sender_id: data.senderId,
+          receiver_id: data.receiverId,
+          content: data.text,
+          created_at: data.createAt
+        }
+      ]);
+    });
+  }, []);
   return (
     <div className="bg-white fixed bottom-10 right-10 flex-center rounded-full w-[3.5rem] h-[3.5rem]">
       <img
