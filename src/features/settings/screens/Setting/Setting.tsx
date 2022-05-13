@@ -29,8 +29,13 @@ import Pagination from '@app/components/atoms/Pagination/Pagination';
 import styles from './Setting.module.scss';
 import cx from 'classnames';
 import ReactModal from 'react-modal';
-import { addCategory } from '@app/features/category/api/category.api';
+import {
+  addCategory,
+  deleteCategory,
+  updateCategory
+} from '@app/features/category/api/category.api';
 import { getCategories } from '@app/features/category/redux/category.slice';
+import { CategoryDef } from '@app/features/category/category';
 
 // position: 'absolute',
 // top: '50%',
@@ -177,6 +182,7 @@ function Setting() {
       setUrlImage(URL.createObjectURL(file));
     };
   };
+  //add food
   const onSubmit = async (data: any) => {
     setIsLoadingButton(true);
     const formData = new FormData();
@@ -192,24 +198,22 @@ function Setting() {
     } else {
       formData.append('url_img', urlImage);
     }
-    let result;
-    if (isEdit) {
-      result = await updateFood(idFood, formData);
-    } else {
-      result = await addFood(formData);
-    }
-    if (result) {
+    try {
+      if (isEdit) {
+        await updateFood(idFood, formData);
+      } else {
+        await addFood(formData);
+      }
       closeModal();
       showToast(`${isEdit ? 'Cập nhật' : 'Thêm'} món ăn thành công`);
       setUrlImage('');
       setFileData(null);
-    } else {
+    } catch {
       closeModal();
       showToast(`${isEdit ? 'Cập nhật' : 'Thêm'} món ăn thất bại`, true);
       setUrlImage('');
       setFileData(null);
     }
-    toastRef.current.showToast();
     getData();
     setIsLoadingButton(false);
   };
@@ -298,6 +302,11 @@ function Setting() {
   const [showModalCategory, setShowModalCategory] = useState(false);
   const [showModalAddCategory, setShowModalAddCategory] = useState(false);
   const [categoryName, setCategoryName] = useState('');
+  const [showModalDeleteCategory, setShowModalDeleteCategory] = useState(false);
+  const [categoryDelete, setCategoryDelete] = useState<CategoryDef | null>(
+    null
+  );
+  const [isLoadingEdit, setIsLoadingEdit] = useState(false);
   const listCategories = useMemo(() => {
     return categories.map(item => {
       return {
@@ -314,6 +323,9 @@ function Setting() {
   const closeModalCategory = () => {
     setShowModalCategory(false);
   };
+  const closeModalDeleteCategory = () => {
+    setShowModalDeleteCategory(false);
+  };
   const changeCategoryName = (
     e: ChangeEvent<HTMLInputElement>,
     index: number
@@ -322,7 +334,25 @@ function Setting() {
     listFakeCategories[index].name = e.target.value;
     setDummyCategories(listFakeCategories);
   };
-  const editCategoryName = (index: number) => {
+  const editCategoryName = async (index: number) => {
+    if (dummyCategories[index].isEdit) {
+      if (!dummyCategories[index]?.name) {
+        return;
+      }
+      setIsLoadingEdit(true);
+      try {
+        await updateCategory(
+          dummyCategories[index]?._id ?? '',
+          dummyCategories[index]?.name ?? ''
+        );
+        showToast(`Cập nhật thành công`);
+        await dispatch(getCategories());
+      } catch {
+        showToast(`Cập nhật thất bại`, true);
+      }
+      setIsLoadingEdit(false);
+      return;
+    }
     const listFakeCategories = [...dummyCategories];
     listFakeCategories[index].isEdit = true;
     setDummyCategories(listFakeCategories);
@@ -339,40 +369,68 @@ function Setting() {
             disabled={!category.isEdit}
             onChange={e => changeCategoryName(e, index)}
           />
-          <button className="flex-center btn-primary-outline p-3 mx-3">
+          <button
+            className="flex-center btn-primary-outline p-3 mx-3"
+            onClick={() => {
+              setCategoryDelete(category);
+              setShowModalDeleteCategory(true);
+            }}
+          >
             <span className="material-icons-outlined">delete</span>
           </button>
           <button
             className="flex-center btn-primary-outline p-3"
             onClick={() => editCategoryName(index)}
           >
-            <span className="material-icons-outlined">
-              {!category.isEdit ? 'edit' : 'done'}
-            </span>
+            {isLoadingEdit && category.isEdit ? (
+              <LoadingSpinner size={20} />
+            ) : (
+              <span className="material-icons-outlined">
+                {!category.isEdit ? 'edit' : 'done'}
+              </span>
+            )}
           </button>
         </div>
       );
     });
     return result;
   };
-  //delete category
+  //add category
   const closeModalAddCategory = () => {
     setShowModalAddCategory(false);
   };
   const handleAddCategory = async (e: FormEvent) => {
     e.preventDefault();
+    if (!categoryName) {
+      return;
+    }
     setIsLoading(true);
-    const result = await addCategory(categoryName);
-    if (result) {
+    try {
+      await addCategory(categoryName);
       closeModalAddCategory();
       showToast(`Thêm thể loại thành công`);
-      dispatch(getCategories());
-    } else {
+      await dispatch(getCategories());
+    } catch {
       showToast(`Thêm thể loại thất bại`, true);
     }
     setCategoryName('');
     setIsLoading(false);
   };
+  // delete category
+  const handleDeleteCategory = async () => {
+    setIsLoading(true);
+    try {
+      await deleteCategory(categoryDelete?._id ?? '');
+      setShowModalDeleteCategory(false);
+      showToast(`Xóa thể loại thành công`);
+      dispatch(getCategories());
+    } catch {
+      setShowModalDeleteCategory(false);
+      showToast(`Xóa thể loại thất bại`);
+    }
+    setIsLoading(false);
+  };
+
   return (
     <div className="bg-dark min-h-[100vh] text-white px-8">
       <p className="text-3xl mb-6 pt-6">Settings</p>
@@ -520,8 +578,11 @@ function Setting() {
                   : ''
               }`}
             >
-              {isLoadingButton && <LoadingSpinner size={20} />}
-              {isEdit ? 'Cập nhật' : 'Thêm'}
+              {isLoadingButton ? (
+                <LoadingSpinner size={20} />
+              ) : (
+                <span>{isEdit ? 'Cập nhật' : 'Thêm'}</span>
+              )}
             </button>
           </div>
         </form>
@@ -580,6 +641,7 @@ function Setting() {
           <div>{renderCategories()}</div>
         </div>
       </ReactModal>
+
       {/* Add */}
       <ReactModal
         onRequestClose={closeModalAddCategory}
@@ -615,6 +677,36 @@ function Setting() {
       </ReactModal>
       {/* End add */}
 
+      {/* Confirm delete */}
+      <ReactModal
+        onRequestClose={closeModalDeleteCategory}
+        isOpen={showModalDeleteCategory}
+        shouldCloseOnOverlayClick
+        style={customStyles}
+      >
+        <div className="text-white px-6">
+          <p className="text-3xl mb-8 mt-3">Xác nhận xóa</p>
+          <p>
+            Bạn chắc chắn muốn xóa thể loại{' '}
+            <span className="text-red-600">{categoryDelete?.name}</span> chứ ? ?
+          </p>
+          <div className="mt-10 mb-7 flex justify-end">
+            <button
+              className="btn-primary-outline w-[100px] mr-3"
+              onClick={closeModalDeleteCategory}
+            >
+              Hủy bỏ
+            </button>
+            <button
+              className="flex-center btn-primary w-[100px]"
+              onClick={handleDeleteCategory}
+            >
+              {isLoading ? <LoadingSpinner size={20} /> : <span>'Xóa'</span>}
+            </button>
+          </div>
+        </div>
+      </ReactModal>
+      {/* End Confirm delete */}
       {/* End categories */}
 
       <Toastify

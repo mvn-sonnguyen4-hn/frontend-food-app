@@ -10,3 +10,11 @@ export const addCategory = async (name: string) => {
     name
   });
 };
+
+export const deleteCategory = async (id: string) => {
+  return api.delete(`${CategoryEndpointsEnum.DELETE}/${id}`);
+};
+
+export const updateCategory = async (id: string, name: string) => {
+  return api.put(`${CategoryEndpointsEnum.UPDATE}/${id}`, { name });
+};

@@ -7,8 +7,8 @@ import { ComponentType, ElementType, memo, useEffect } from 'react';
 import {
   Routes as Switch,
   Route,
-  Navigate,
-  useNavigate
+  Navigate
+  // useNavigate
 } from 'react-router-dom';
 import { PRIVATE_LIST, PUBLIC_LIST } from './routes.config';
 
@@ -41,7 +41,7 @@ function Routes() {
       )}
     />
   );
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const renderRoute = (
     Component: ComponentType,
     isProtectedRoute: RouteWrapperConfigDef,
