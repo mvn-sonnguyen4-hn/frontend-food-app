@@ -1,5 +1,3 @@
-import { Timestamp } from 'firebase/firestore';
-
 export enum enumToastify {
   error = 'error',
   success = 'success'
@@ -11,8 +9,9 @@ export interface CustomSelectProps {
 }
 
 export interface MessageDef {
-  sender_id: string;
-  receiver_id: string;
+  from: string;
+  to: string;
   content: string;
-  created_at: Timestamp;
+  createdAt?: Date;
+  status?: Number;
 }

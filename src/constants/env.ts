@@ -15,5 +15,5 @@ export const ENV = {
   MESSAGING_SENDER_ID: '606100025440',
   APP_ID: '1:606100025440:web:098d416f21356e5b9dd305',
   MEASUREMENT_ID: 'G-FXQ89MQQY3',
-  HOST_SOCKET: 'ws://localhost:5000'
+  HOST_SOCKET: 'ws://localhost:8900'
 };

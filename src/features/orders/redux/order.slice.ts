@@ -73,7 +73,7 @@ const orderSlice = createSlice({
   name: ORDER_FEATURE_KEY,
   initialState,
   reducers: {
-    addOrder(state, action: PayloadAction<OrderDef>) {
+    addOrder(state: InitialStateDef, action: PayloadAction<OrderDef>) {
       const index = state.listOrder.findIndex(
         order => order.food?._id === action.payload.food?._id
       );
@@ -85,7 +85,7 @@ const orderSlice = createSlice({
       state.listOrder[index].amount = amount + 1;
     },
     changeAmountOrder(
-      state,
+      state: InitialStateDef,
       action: PayloadAction<{
         amount: number;
         position: number;
@@ -98,7 +98,7 @@ const orderSlice = createSlice({
         action.payload.amount < 1 ? 1 : action.payload.amount;
     },
     changeNoteOrder(
-      state,
+      state: InitialStateDef,
       action: PayloadAction<{
         note: string;
         position: number;
@@ -107,7 +107,7 @@ const orderSlice = createSlice({
       state.listOrder[action.payload.position].note = action.payload.note;
     },
     addListOrder(
-      state,
+      state: InitialStateDef,
       action: PayloadAction<{
         status: string;
         listOrders: OrderDef[];
@@ -135,10 +135,10 @@ const orderSlice = createSlice({
       state.user_id = user_id;
       state._id = _id;
     },
-    removeOrder(state, action: PayloadAction<number>) {
+    removeOrder(state: InitialStateDef, action: PayloadAction<number>) {
       state.listOrder.splice(action.payload, 1);
     },
-    changeStatusOrder(state, action: PayloadAction<string>) {
+    changeStatusOrder(state: InitialStateDef, action: PayloadAction<string>) {
       state.status = action.payload;
     }
   },

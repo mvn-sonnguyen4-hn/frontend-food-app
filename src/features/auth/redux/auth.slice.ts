@@ -71,14 +71,18 @@ const authSlice = createSlice({
   name: AUTH_FEATURE_KEY,
   initialState,
   reducers: {
-    logout(state) {
+    logout(state: InitialStateDef) {
       state.user = null;
       state.isAuthenticated = false;
       state.error = false;
       state.loading = false;
+      localStorage.removeItem('id');
       clearTokens();
     },
-    changeAdress(state, data: PayloadAction<{ address: string }>) {
+    changeAdress(
+      state: InitialStateDef,
+      data: PayloadAction<{ address: string }>
+    ) {
       if (state.user) {
         state.user.address = data.payload.address;
       } else {
@@ -89,7 +93,10 @@ const authSlice = createSlice({
         state.user.address = data.payload.address;
       }
     },
-    changePhonenumber(state, data: PayloadAction<{ phonenumber: number }>) {
+    changePhonenumber(
+      state: InitialStateDef,
+      data: PayloadAction<{ phonenumber: number }>
+    ) {
       if (state.user) {
         state.user.phonenumber = data.payload.phonenumber;
       } else {
@@ -100,7 +107,10 @@ const authSlice = createSlice({
         state.user.phonenumber = data.payload.phonenumber;
       }
     },
-    changeFullname(state, data: PayloadAction<{ name: string }>) {
+    changeFullname(
+      state: InitialStateDef,
+      data: PayloadAction<{ name: string }>
+    ) {
       if (state.user) {
         state.user.first_name = data.payload.name;
       } else {
@@ -147,6 +157,7 @@ const authSlice = createSlice({
         address,
         role
       };
+      localStorage.setItem('id', _id);
       if (token) {
         saveTokens({ token });
       }
@@ -188,6 +199,7 @@ const authSlice = createSlice({
         avatar_url,
         role
       };
+      localStorage.setItem('id', _id);
       if (token) {
         saveTokens({ token });
       }
@@ -229,6 +241,7 @@ const authSlice = createSlice({
         avatar_url,
         role
       };
+      localStorage.setItem('id', _id);
       if (token) {
         saveTokens({ token });
       }

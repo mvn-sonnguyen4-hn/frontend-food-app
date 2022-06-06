@@ -5,7 +5,8 @@ import styles from './Navbar.module.scss';
 import { useAppDispatch, useAppSelector } from '@app/redux/store';
 import { logout } from '@app/features/auth/auth';
 import { AUTH_ROLE } from '@app/constants/auth.constants';
-// import Chat from '@app/components/Chat/Chat';
+import Chat from '@app/components/Chat/Chat';
+import { RoleDef } from '@app/types/role.type';
 interface NavbarProps {
   children: ReactNode;
 }
@@ -63,14 +64,24 @@ const Navbar = memo(({ children }: NavbarProps) => {
             </NavLink>
           )}
         {user && user.role === AUTH_ROLE.ADMIN && (
-          <NavLink
-            to="/settings"
-            className={({ isActive }) => (isActive ? styles.active : '')}
-          >
-            <div className={styles.box}>
-              <span className="material-icons-outlined">settings</span>
-            </div>
-          </NavLink>
+          <>
+            <NavLink
+              to="/settings"
+              className={({ isActive }) => (isActive ? styles.active : '')}
+            >
+              <div className={styles.box}>
+                <span className="material-icons-outlined">settings</span>
+              </div>
+            </NavLink>
+            <NavLink
+              to="/inbox"
+              className={({ isActive }) => (isActive ? styles.active : '')}
+            >
+              <div className={styles.box}>
+                <span className="material-icons-outlined">chat</span>
+              </div>
+            </NavLink>
+          </>
         )}
         <div className="absolute bottom-8 left-[50%] translate-x-[-50%] icon-user">
           {user && user.avatar_url ? (
@@ -130,7 +141,7 @@ const Navbar = memo(({ children }: NavbarProps) => {
         )}
       </nav>
       <div className="ml-[6.5rem]">{children}</div>
-      {/* <Chat /> */}
+      {user && user.role === RoleDef.USER && <Chat />}
     </div>
   );
 });

@@ -37,6 +37,7 @@ body {
   }
   .btn-primary:hover {
     color: theme('colors.primary');
+    border: 1px solid theme('colors.primary');
     background: #1f1d2b;
   }
   .btn-primary-outline {

@@ -37,15 +37,6 @@ import {
 import { getCategories } from '@app/features/category/redux/category.slice';
 import { CategoryDef } from '@app/features/category/category';
 
-// position: 'absolute',
-// top: '50%',
-// left: '50%',
-// transform: 'translate(-50%,-50%)',
-// background: '#1F1D2B',
-// borderRadius: '1rem',
-// width: 'fit-content',
-// height: 'fit-content',
-// border: 'none'
 const customStyles = {
   content: {
     top: '50%',
