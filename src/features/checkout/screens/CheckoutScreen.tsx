@@ -2,7 +2,11 @@ import FormInput from '@app/components/atoms/FormInput/FormInput';
 import LoadingSpinner from '@app/components/atoms/LoadingSpinner/LoadingSpinner';
 import Toastify from '@app/components/atoms/Toastify/Toastify';
 import { dataInput } from '@app/constants/validation.constanst';
-import { changeAmountOrder, uploadOrders } from '@app/features/orders/orders';
+import {
+  changeAmountOrder,
+  removeOrder,
+  uploadOrders
+} from '@app/features/orders/orders';
 import { useAppDispatch, useAppSelector } from '@app/redux/store';
 import { enumToastify } from '@app/types/atom.type';
 import { formatCurrency } from '@app/utils/functions';
@@ -127,7 +131,10 @@ const CheckoutScreen = () => {
             </div>
           </div>
           <div>
-            <span className="material-icons-outlined text-primary cursor-pointer">
+            <span
+              className="material-icons-outlined text-primary cursor-pointer"
+              onClick={() => deleteOrder(index)}
+            >
               close
             </span>
           </div>
@@ -175,6 +182,9 @@ const CheckoutScreen = () => {
         position: index
       })
     );
+  };
+  const deleteOrder = (index: number) => {
+    dispatch(removeOrder(index));
   };
   return (
     <section className="bg-dark min-h-[100vh] text-white pt-20 px-14">
