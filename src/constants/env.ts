@@ -3,7 +3,7 @@ import packageJson from '../../package.json';
 export const ENV = {
   VERSION: packageJson.version || '',
   NODE_ENV: process.env.NODE_ENV,
-  API_HOST: process.env.REACT_APP_API_HOST ?? '',
+  API_HOST: 'https://foodapp762.herokuapp.com/api/',
   URL_IMAGE_DEFAULT:
     'https://res.cloudinary.com/monstarlab777/image/upload/v1651456550/1-13_x7rcqz.png',
   API_KEY_FIREBASE: 'AIzaSyATQsqjwLx6sl65VhsDTXE3nirmiqU8_gw',
