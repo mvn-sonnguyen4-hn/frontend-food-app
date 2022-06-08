@@ -17,7 +17,7 @@ function FormInput(props: Props) {
       <input
         {...props}
         type={props.type || 'text'}
-        className={`w-full py-2 px-3 rounded-3 outline-0 bg-[#2D303E] text-white border-0 rounded-lg no-croll ${
+        className={`w-full py-2 px-3 rounded-3 outline-0 bg-[#2D303E] text-white border- rounded-lg no-croll ${
           props.disabled && 'pointer-events-none'
         }`}
       />

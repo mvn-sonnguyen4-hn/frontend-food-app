@@ -3,13 +3,14 @@ export const dataInput = [
     label: 'Họ',
     name: 'first_name',
     rules: {
-      required: 'Họ tên không được để trống.',
+      required: 'Họ không được để trống.',
       maxLength: {
         value: 15,
         message: 'Họ tên không được vượt quá 59 ký tự'
       }
     },
-    value: ''
+    value: '',
+    type:'text'
   },
   {
     label: 'Tên',
@@ -21,10 +22,11 @@ export const dataInput = [
         message: 'Họ tên không được vượt quá 15 ký tự'
       }
     },
-    value: ''
+    value: '',
+    type:'text'
   },
   {
-    label: 'Address',
+    label: 'Địa chỉ',
     name: 'address',
     rules: {
       required: 'Địa chỉ không được để trống.',
@@ -33,10 +35,11 @@ export const dataInput = [
         message: 'Địa chỉ không được vượt quá 100 ký tự'
       }
     },
-    value: ''
+    value: '',
+    type:'text'
   },
   {
-    label: 'Phonenumber',
+    label: 'Số điện thoại',
     name: 'phonenumber',
     rules: {
       required: 'Số điện thoại không được để trống.',
@@ -45,6 +48,7 @@ export const dataInput = [
         message: 'Số điện thoại không hợp lệ'
       }
     },
-    value: 0
+    value: 0,
+    type:'text'
   }
 ];

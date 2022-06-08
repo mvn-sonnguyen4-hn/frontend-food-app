@@ -40,7 +40,7 @@ const Navbar = memo(({ children }: NavbarProps) => {
 
   return (
     <div>
-      <nav className="flex flex-col pl-3 fixed min-h-[100vh] max-h-[100vh] w-[6.5rem] bg-dark-second pt-6 text-primary text-[26px]">
+      <nav className="flex flex-col pl-3 fixed min-h-[100vh] max-h-[100vh] w-[6.5rem] bg-dark-second pt-6 text-primary text-[26px] z-10">
         <NavLink to="/home" className="mb-7 flex-center">
           <img src={DashboardImage} alt="" />
         </NavLink>

@@ -22,15 +22,16 @@ import { useNavigate } from 'react-router';
 interface IPropsListOrders {
   closeModalAndNotify: Function;
   isEdit?: boolean;
+  closeModal:Function;
 }
 
 function OrderSidebar({
   closeModalAndNotify,
-  isEdit = false
+  isEdit = false,
+  closeModal
 }: IPropsListOrders) {
   const dispatch = useAppDispatch();
   const listOrders = useAppSelector(state => state.order.listOrder);
-  const user = useAppSelector(state => state.auth.user);
   const orderStore = useAppSelector(state => state.order);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -171,9 +172,9 @@ function OrderSidebar({
           <table className="w-full">
             <thead>
               <tr className={cx(styles.divider)}>
-                <td className="pb-6">Item</td>
-                <td className="pb-6">Qty</td>
-                <td className="pb-6">Price</td>
+                <td className="pb-6">Thực đơn</td>
+                <td className="pb-6">Số lượng</td>
+                <td className="pb-6">Giá</td>
               </tr>
             </thead>
             <tbody>
@@ -185,7 +186,7 @@ function OrderSidebar({
               </tr>
               <tr>
                 <td colSpan={2} className="pt-6">
-                  Sub total
+                  Tổng tiền
                 </td>
                 <td className="pl-4 pt-6">{formatCurrency(total)}</td>
               </tr>
@@ -195,14 +196,14 @@ function OrderSidebar({
         {!isEdit ? (
           <button
             className={`btn-primary w-full py-3 mt-7 flex-center outline-none border-none ${
-              listOrders.length === 0 || !user?.address || !user?.phonenumber
+              listOrders.length === 0
                 ? 'opacity-50 pointer-events-none'
                 : ''
             }`}
             onClick={() => navigate('/checkout')}
           >
             {isLoading && <LoadingSpinner size={20} />}
-            <span className="ml-1">Create order</span>
+            <span className="ml-1">Tạo đơn hàng</span>
           </button>
         ) : (
           <div className="flex gap-2 mt-12">
@@ -210,14 +211,22 @@ function OrderSidebar({
               className="btn-primary-outline flex-center flex-1"
               onClick={() => closeModalAndNotify()}
             >
-              Cancel
+              Hủy bỏ
             </button>
             <button className="btn-primary flex-center flex-1" onClick={save}>
               {isLoading && <LoadingSpinner size={20} />}
-              Save changes
+              Lưu thay đổi
             </button>
           </div>
         )}
+        <div className="flex mt-3">
+          <button
+            className="btn-primary-outline flex-center flex-1"
+            onClick={()=>closeModal()}
+          >
+            Đóng
+          </button>
+        </div>
       </div>
     </div>
   );

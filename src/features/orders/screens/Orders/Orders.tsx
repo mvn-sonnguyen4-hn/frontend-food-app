@@ -21,6 +21,7 @@ import { enumToastify } from '@app/types/atom.type';
 import Toastify from '@app/components/atoms/Toastify/Toastify';
 import Modal from 'react-modal';
 import { AUTH_ROLE } from '@app/constants/auth.constants';
+import cx from 'classnames'
 
 const Orders = () => {
   const user = useAppSelector(state => state.auth.user);
@@ -180,7 +181,7 @@ const Orders = () => {
               </div>
             </td>
             <td onClick={() => chooseOrder(order)}>
-              {order.user ? order.user.username : order.fullname}
+              {order.user ? order.user.first_name+' '+order.user.last_name : order.fullname}
             </td>
             <td onClick={() => chooseOrder(order)}>{nameOrder.join(',')}</td>
             <td onClick={() => chooseOrder(order)}>{formatCurrency(total)}</td>
@@ -190,10 +191,10 @@ const Orders = () => {
             </td>
             <td onClick={() => chooseOrder(order)}>
               <button
-                className="py-1 rounded-3xl flex-center w-[7rem]"
+                className="py-1 rounded-3xl flex-center w-[8rem]"
                 style={{ background: btn?.background, color: btn?.color }}
               >
-                {btn?.type}
+                {btn?.label}
               </button>
             </td>
           </tr>
@@ -202,7 +203,9 @@ const Orders = () => {
     });
     return result;
   };
-
+  const closeModal=()=>{
+    setIsShowModal(false);
+  }
   return (
     <div className="bg-dark min-h-[100vh] text-white pt-8 px-14">
       <p className="text-3xl">Orders</p>
@@ -236,10 +239,10 @@ const Orders = () => {
                 <span className="material-icons-outlined text-xl translate-y-[-1px]">
                   delete
                 </span>
-                <span className="ml-1 text-base font-semibold">Delete</span>
+                <span className="ml-1 text-base font-semibold">Xóa</span>
               </button>
             </div>
-            <div className={styles.box}>
+            <div className={cx('custom-scrollbar',styles.box)}>
               <table className={styles.table}>
                 <thead>
                   <tr>
@@ -251,11 +254,11 @@ const Orders = () => {
                         />
                       </div>
                     </td>
-                    <td>Order By</td>
+                    <td>Người đặt</td>
                     <td>Menu</td>
-                    <td>Total Payment</td>
-                    <td>Created Date</td>
-                    <td>Status</td>
+                    <td>Tổng tiền</td>
+                    <td>Ngày đặt</td>
+                    <td>Trạng thái</td>
                   </tr>
                 </thead>
                 <tbody>
@@ -281,7 +284,7 @@ const Orders = () => {
         isShow={isShowModal}
         closeModal={() => setIsShowModal(false)}
       >
-        <OrderSidebar closeModalAndNotify={closeModalAndNotify} isEdit />
+        <OrderSidebar closeModal={closeModal} closeModalAndNotify={closeModalAndNotify} isEdit />
       </CustomModal>
       <Modal
         isOpen={isShowModalDelete}
@@ -323,7 +326,7 @@ const Orders = () => {
               onClick={handleDeleteOrders}
             >
               {isLoading && <LoadingSpinner size={20} />}
-              Delete
+              Xóa
             </button>
           </div>
         </div>

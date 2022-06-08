@@ -117,7 +117,7 @@ function Setting() {
     const result = listFood.data.map((food, index) => {
       return (
         <div
-          className="text-center border-solid-gray rounded-lg relative"
+          className="text-center border-solid-gray rounded-lg relative flex flex-col justify-end"
           key={food._id}
         >
           <div
@@ -426,9 +426,9 @@ function Setting() {
     <div className="bg-dark min-h-[100vh] text-white px-8">
       <p className="text-3xl mb-6 pt-6">Settings</p>
       <div className="bg-dark-second px-6 py-9 rounded-lg">
-        <div className="flex justify-between items-center mb-8z">
-          <p className="text-2xl">Quản lý thực đơn</p>
-          <div className="flex">
+        <div className="flex justify-between items-center mb-8 flex-wrap">
+          <p className="text-2xl mb-2">Quản lý thực đơn</p>
+          <div className="flex flex-wrap">
             <button
               className="flex px-2 py-1 bg-[#9D0505] rounded-lg mr-4"
               onClick={openModalDelete}

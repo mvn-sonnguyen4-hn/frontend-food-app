@@ -115,19 +115,19 @@ const SettingsScreen = () => {
         onSubmit={handleSubmit(onSubmit)}
         className="bg-dark-second rounded-2xl"
       >
-        <p className="text-center text-3xl pt-6 pb-7">Info User</p>
-        <div className="flex justify-around">
-          <div className="basis-[30%]">{showInput()}</div>
-          <div className="text-center">
+        <p className="text-center text-3xl pt-6 pb-7">Thông tin người dùng</p>
+        <div className="flex justify-around flex-col md:flex-row px-3">
+          <div className="basis-[50%]">{showInput()}</div>
+          <div className="text-center flex flex-col justify-center items-center">
             <div
-              className={`h-[fit-content] rounded-full ${
+              className={`h-fit rounded-full w-fit ${
                 !user || !user.avatar_url
                   ? 'border-[1px] border-primary border-solid '
                   : ''
               }`}
             >
               <img
-                className="w-[15rem] h-[15rem] object-cover rounded-full"
+                className="w-[10rem] md:w-[14rem] h-[10rem] md:h-[14rem] object-cover rounded-full"
                 src={
                   img_url
                     ? img_url

@@ -50,19 +50,19 @@ function LoginScreen() {
     setIsErrLogin(false);
   };
   return (
-    <div className="bg-dark min-h-[100vh] min-w-full flex justify-center items-center">
+    <div className="bg-dark min-h-[100vh] min-w-full flex flex-col justify-center items-center">
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="bg-dark-second px-6 w-[405px] rounded-lg"
       >
         <p className="text-left font-28 mt-6 text-white text-2xl">
-          {isLogin ? 'Login' : 'Sign up'}
+          {isLogin ? 'Đăng nhập' : 'Đăng kí'}
         </p>
         <p className="my-5 bg-[#393C49] w-full h-[1px]" />
         {!isLogin && (
           <>
             <div>
-              <p className="text-white font-14 mb-1 text-sm">Firstname</p>
+              <p className="text-white font-14 mb-1 text-sm">Họ</p>
               <Controller
                 control={control}
                 name="first_name"
@@ -83,7 +83,7 @@ function LoginScreen() {
               />
             </div>
             <div className="mt-3">
-              <p className="text-white font-14 mb-1 text-sm">Lastname</p>
+              <p className="text-white font-14 mb-1 text-sm">Tên</p>
               <Controller
                 control={control}
                 name="last_name"
@@ -152,7 +152,7 @@ function LoginScreen() {
           </div>
         )}
         <div className="mt-3">
-          <p className="text-white font-14 mb-1 text-sm">Password</p>
+          <p className="text-white font-14 mb-1 text-sm">Mật khẩu</p>
           <Controller
             control={control}
             name="password"
@@ -175,7 +175,7 @@ function LoginScreen() {
         {!isLogin && (
           <>
             <div className="mt-3">
-              <p className="text-white font-14 mb-1 text-sm">Address</p>
+              <p className="text-white font-14 mb-1 text-sm">Địa chỉ</p>
               <Controller
                 control={control}
                 name="address"
@@ -196,12 +196,16 @@ function LoginScreen() {
               />
             </div>
             <div className="mt-3">
-              <p className="text-white font-14 mb-1 text-sm">Phonenumber</p>
+              <p className="text-white font-14 mb-1 text-sm">Số điện thoại</p>
               <Controller
                 control={control}
                 name="phonenumber"
                 rules={{
-                  required: 'Số điện thoại không được để trống.'
+                  required: 'Số điện thoại không được để trống.',
+                  pattern: {
+                    value: /(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})\b/,
+                    message: 'Số điện thoại không hợp lệ'
+                  }
                 }}
                 render={({
                   field: { onChange, name },
@@ -211,7 +215,6 @@ function LoginScreen() {
                     name={name}
                     error={error?.message}
                     onChange={onChange}
-                    type="number"
                   />
                 )}
               />
@@ -240,9 +243,18 @@ function LoginScreen() {
             setIsErrLogin(false);
           }}
         >
-          {isLogin ? 'Sign up' : 'Sign in'}
+          {isLogin ? 'Đăng kí' : 'Đăng nhập'}
         </p>
       </form>
+      <div></div>
+      <p
+        className="text-primary underline cursor-pointer"
+        onClick={() => {
+          navigate('/');
+        }}
+      >
+        Home
+      </p>
     </div>
   );
 }
