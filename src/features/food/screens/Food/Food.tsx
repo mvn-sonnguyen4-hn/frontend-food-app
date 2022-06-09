@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useAppDispatch } from '@app/redux/store';
 import { addOrder } from '@app/features/orders/orders';
 import styles from './Food.module.scss';
+import { formatCurrency } from '@app/utils/functions';
 
 interface IFoodProps {
   _id: string;
@@ -42,7 +43,7 @@ function Food({
     <div className="mt-4">
       <div
         className={cx(
-          'bg-dark-second rounded-2xl h-[14rem] text-sm text-center cursor-pointer',
+          'bg-dark-second rounded-2xl h-[14rem] min-w-[11rem] text-sm text-center cursor-pointer',
           styles.item
         )}
         onMouseOver={() => setIsHover(true)}
@@ -56,11 +57,10 @@ function Food({
           />
         </div>
         <p className="mx-6">{name}</p>
-        <p className="mt-2 mb-1">${price}</p>
-        <p>{avaiable} Bowls available</p>
+        <p className="mt-2 mb-1">{formatCurrency(price)}</p>
         <button className={isHover ? styles.btnAdd : 'hidden'} onClick={add}>
           <span className="material-icons-outlined">add</span>
-          Add To Order
+          Thêm vào giỏ hàng
         </button>
       </div>
     </div>

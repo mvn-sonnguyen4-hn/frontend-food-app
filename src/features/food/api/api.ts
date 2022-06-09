@@ -18,7 +18,7 @@ export const getFoodByPaginationAndCategoryType = (
     params: {
       page,
       type,
-      limit: 5,
+      limit: 6,
       keyword
     }
   });

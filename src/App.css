@@ -37,3 +37,6 @@
     transform: translateY(0px);
   }
 }
+.ReactModal__Overlay{
+  z-index: 10;
+}

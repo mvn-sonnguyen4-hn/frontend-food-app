@@ -13,6 +13,7 @@ import Toastify from '@app/components/atoms/Toastify/Toastify';
 import { enumToastify } from '@app/types/atom.type';
 import Pagination from '@app/components/atoms/Pagination/Pagination';
 import { useAppSelector } from '@app/redux/store';
+import Moment from 'react-moment';
 
 function Home() {
   const orders = useAppSelector(state => state.order.listOrder);
@@ -121,10 +122,10 @@ function Home() {
   };
   return (
     <div className="bg-dark min-h-[100vh] text-white pt-8 px-14">
-      <div className="flex items-end justify-between">
+      <div className="flex items-end justify-between flex-wrap">
         <div>
-          <p className="text-3xl">Jaegar Resto</p>
-          <p className="mb-6 mt-1">Tuesday, 2 Feb 2021</p>
+          <p className="text-3xl">Nấm Store</p>
+          <p className="mb-6 mt-1"><Moment format="ll">{new Date().toISOString()}</Moment></p>
         </div>
         <form onSubmit={handleSearch}>
           <div className="bg-[#2D303E] rounded-lg border-solid border-[#393C49] border-[1px] flex items-center p-3">
@@ -142,7 +143,7 @@ function Home() {
         </form>
       </div>
       <div className="flex justify-between items-end">
-        <p className="mb-4 mt-6 text-xl font-bold">Choose Dishes</p>
+        <p className="mb-4 mt-6 text-xl font-bold">Chọn món</p>
         <div
           className="relative cursor-pointer"
           onClick={() => navigate('/checkout')}
@@ -162,7 +163,7 @@ function Home() {
         ref={toastRef}
       />
       <CustomModal isShow={isShow} closeModal={closeModal}>
-        <OrderSidebar closeModalAndNotify={closeModalAndNotify} />
+        <OrderSidebar closeModal={closeModal} closeModalAndNotify={closeModalAndNotify} />
       </CustomModal>
       {isLoading && (
         <div className="flex justify-center">
@@ -170,7 +171,7 @@ function Home() {
           <LoadingSpinner size={40} primaryColor />
         </div>
       )}
-      <div className="grid grid-cols-192 place-content-between gap-10 mb-12">
+      <div className="grid grid-cols-192 place-items-center justify-center gap-10 mb-12">
         {showListFood()}
       </div>
       <Pagination totalPage={paginate.total} currentPage={paginate.current} />

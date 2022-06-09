@@ -13,6 +13,8 @@ import { formatCurrency } from '@app/utils/functions';
 import { useMemo, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
+import cx from 'classnames';
+import styles from './CheckoutScreeen.module.scss';
 
 const CheckoutScreen = () => {
   const user = useAppSelector(state => state.auth.user);
@@ -36,6 +38,33 @@ const CheckoutScreen = () => {
     }, 0);
   }, [orders]);
 
+  const rulesInput = (item: any):any => {
+    let rules = {
+      required: item.rules.required,
+      maxLength: {
+        value: item.rules.maxLength?.value || 20,
+        message: item.rules.maxLength?.message || ''
+      },
+      minLength: {
+        value: 2,
+        message: `${item.label} không được ít hơn 3 ký tự`
+      },
+      pattern: {
+        value: item.rules.pattern?.value || null,
+        message: item.rules.pattern?.message || ''
+      }
+    };
+    if (item.rules.pattern) {
+      rules = {
+        ...rules,
+        pattern: {
+          value: item.rules.pattern?.value,
+          message: item.rules.pattern?.message || ''
+        }
+      };
+    }
+    return rules;
+  };
   const renderFieldInput = () => {
     const values = [
       user?.first_name ?? '',
@@ -54,21 +83,7 @@ const CheckoutScreen = () => {
             defaultValue={item.value}
             control={control}
             name={item.name}
-            rules={{
-              required: '123',
-              maxLength: {
-                value: 59,
-                message: 'Tên không được vượt quá 59 ký tự'
-              },
-              minLength: {
-                value: 3,
-                message: 'Tên không được ít hơn 3 ký tự'
-              },
-              pattern: {
-                value: /^[a-zA-Z0-9_\s]+$/,
-                message: 'Tên không được chứa ký tự đặc biệt'
-              }
-            }}
+            rules={rulesInput(item)}
             render={({
               field: { onChange, name, value = item.value },
               fieldState: { error }
@@ -93,7 +108,10 @@ const CheckoutScreen = () => {
     const result = orders.map((item, index) => {
       return (
         <div
-          className="flex bg-dark rounded-lg p-4 justify-between min-w-[25rem] mb-4"
+          className={cx(
+            'flex bg-dark rounded-lg p-4 justify-between min-w-[25rem] mb-4 mt-2',
+            styles.card
+          )}
           key={index}
         >
           <div className="flex">
@@ -145,6 +163,7 @@ const CheckoutScreen = () => {
   };
 
   const onSubmit = async (data: any) => {
+    console.log('submit');
     if (!orders.length) {
       return;
     }
@@ -155,7 +174,7 @@ const CheckoutScreen = () => {
         address: data.address,
         fullname: data.first_name + ' ' + data.last_name,
         phonenumber: data.phonenumber ?? 0,
-        user_id: data._id
+        user_id: user?._id ?? '',
       })
     );
     if (uploadOrders.fulfilled.match(result)) {
@@ -193,9 +212,9 @@ const CheckoutScreen = () => {
           <div>
             <form
               onSubmit={handleSubmit(onSubmit)}
-              className="flex justify-around"
+              className="flex justify-around flex-wrap px-3"
             >
-              <div>{renderFieldInput()}</div>
+              <div className="w-[100%] md:w-[50%]">{renderFieldInput()}</div>
               <div>
                 <div className="min-h-[10rem] max-h-[40rem] custom-scrollbar overflow-y-auto rounded-lg">
                   {renderOrders()}
@@ -209,7 +228,7 @@ const CheckoutScreen = () => {
                   type="submit"
                 >
                   {isLoading && <LoadingSpinner />}{' '}
-                  <span className="ml-2">Dat hang</span>
+                  <span className="ml-2">Đặt hàng</span>
                 </button>
               </div>
             </form>
@@ -221,7 +240,7 @@ const CheckoutScreen = () => {
             className="btn-primary rounded-3xl px-20"
             onClick={() => navigate('/')}
           >
-            Quay lai trang chu
+            Quay lại trang chủ
           </button>
         </div>
       )}
