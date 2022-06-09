@@ -100,7 +100,7 @@ function Chat() {
   useEffect(() => {
     // scroll to bottom after message changed
     socket.current = io(ENV.HOST_SOCKET, {
-      transports: ['websocket']
+      reconnectionDelayMax: 10000,
     });
     const localId = localStorage.getItem('id') || '';
     const id = uuidv4();
