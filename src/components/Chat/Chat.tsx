@@ -69,6 +69,7 @@ function Chat() {
             position="bottom-end"
             interactive
             theme="light"
+            delay={1000}
             html={
               <div>
                 <Moment format="LLLL">{item.createdAt}</Moment>
