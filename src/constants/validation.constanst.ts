@@ -10,7 +10,7 @@ export const dataInput = [
       }
     },
     value: '',
-    type:'text'
+    type: 'text'
   },
   {
     label: 'Tên',
@@ -23,7 +23,7 @@ export const dataInput = [
       }
     },
     value: '',
-    type:'text'
+    type: 'text'
   },
   {
     label: 'Địa chỉ',
@@ -36,7 +36,7 @@ export const dataInput = [
       }
     },
     value: '',
-    type:'text'
+    type: 'text'
   },
   {
     label: 'Số điện thoại',
@@ -48,7 +48,7 @@ export const dataInput = [
         message: 'Số điện thoại không hợp lệ'
       }
     },
-    value: 0,
-    type:'text'
+    value: '',
+    type: 'text'
   }
 ];

@@ -1,5 +1,5 @@
 import { CustomSelectProps } from '@app/types/atom.type';
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import styles from './CustomSelect.module.scss';
 
 interface Props {
@@ -62,4 +62,4 @@ const CustomSelect = ({ value, data, width = 140, onChange }: Props) => {
   );
 };
 
-export default CustomSelect;
+export default memo(CustomSelect);

@@ -29,13 +29,16 @@ export const saveTokens = ({ expiresIn = '86400', token }: ApiResponseDef) => {
     path: '/',
     expires: cookieToken.expiresAt
   });
+  localStorage.setItem('auth', 'true');
 };
 
 /**
  * Clear token from session cookie
  */
-export const clearTokens = () =>
+export const clearTokens = () => {
   cookie.remove(AUTH_ACCESS_TOKEN, { path: '/' });
+  localStorage.removeItem('auth');
+};
 
 /**
  * simplify code in slice with helper

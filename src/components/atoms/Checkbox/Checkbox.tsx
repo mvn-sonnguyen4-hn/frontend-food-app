@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import './Checkbox.scss';
 
 type Props = {
@@ -19,4 +20,4 @@ const Checkbox = ({ isChecked, changeChecked }: Props) => {
   );
 };
 
-export default Checkbox;
+export default memo(Checkbox);

@@ -19,9 +19,8 @@ import { useAppDispatch, useAppSelector } from '@app/redux/store';
 import { formatCurrency } from '@app/utils/functions';
 import { enumToastify } from '@app/types/atom.type';
 import Toastify from '@app/components/atoms/Toastify/Toastify';
-import Modal from 'react-modal';
 import { AUTH_ROLE } from '@app/constants/auth.constants';
-import cx from 'classnames'
+import cx from 'classnames';
 
 const Orders = () => {
   const user = useAppSelector(state => state.auth.user);
@@ -110,18 +109,11 @@ const Orders = () => {
   const closeModalAndNotify = (success = false) => {
     setIsShowModal(false);
     if (success) {
-      setStatusToast({
-        message: 'Update order success',
-        type: enumToastify.success
-      });
+      toggleToast(enumToastify.success, 'Cập nhật giỏ hàng thành công');
       getData();
     } else {
-      setStatusToast({
-        message: 'Update order fail',
-        type: enumToastify.error
-      });
+      toggleToast(enumToastify.error, 'Cập nhật giỏ hàng thất bại');
     }
-    toastRef.current.showToast();
   };
   const handleDeleteOrders = async () => {
     if (!listOrders.length) {
@@ -132,28 +124,16 @@ const Orders = () => {
       .filter(order => order.isChecked)
       .map(order => order._id);
     if (listId.length === 0) {
-      setStatusToast({
-        message: 'Vui lòng chọn ít nhất 1 order',
-        type: enumToastify.error
-      });
-      toastRef.current.showToast();
+      toggleToast(enumToastify.error, 'Vui lòng chọn ít nhất 1 order');
       return;
     }
     const result = await dispatch(removeOrders(listId));
     setIsShowModalDelete(false);
     if (removeOrders.fulfilled.match(result)) {
-      setStatusToast({
-        message: 'Xóa thành công',
-        type: enumToastify.success
-      });
-      toastRef.current.showToast();
+      toggleToast(enumToastify.success, 'Xóa thành công');
       getData();
     } else {
-      setStatusToast({
-        message: 'Xóa thất bại',
-        type: enumToastify.error
-      });
-      toastRef.current.showToast();
+      toggleToast(enumToastify.error, 'Xóa thất bại');
     }
     setIsLoading(false);
   };
@@ -181,7 +161,9 @@ const Orders = () => {
               </div>
             </td>
             <td onClick={() => chooseOrder(order)}>
-              {order.user ? order.user.first_name+' '+order.user.last_name : order.fullname}
+              {order.user
+                ? order.user.first_name + ' ' + order.user.last_name
+                : order.fullname}
             </td>
             <td onClick={() => chooseOrder(order)}>{nameOrder.join(',')}</td>
             <td onClick={() => chooseOrder(order)}>{formatCurrency(total)}</td>
@@ -203,9 +185,16 @@ const Orders = () => {
     });
     return result;
   };
-  const closeModal=()=>{
+  const closeModal = () => {
     setIsShowModal(false);
-  }
+  };
+  const toggleToast = (type: string, message: string) => {
+    setStatusToast({
+      message,
+      type: enumToastify[type as typeof enumToastify[keyof typeof enumToastify]]
+    });
+    toastRef.current.showToast();
+  };
   return (
     <div className="bg-dark min-h-[100vh] text-white pt-8 px-14">
       <p className="text-3xl">Orders</p>
@@ -242,7 +231,7 @@ const Orders = () => {
                 <span className="ml-1 text-base font-semibold">Xóa</span>
               </button>
             </div>
-            <div className={cx('custom-scrollbar',styles.box)}>
+            <div className={cx('custom-scrollbar', styles.box)}>
               <table className={styles.table}>
                 <thead>
                   <tr>
@@ -284,28 +273,30 @@ const Orders = () => {
         isShow={isShowModal}
         closeModal={() => setIsShowModal(false)}
       >
-        <OrderSidebar closeModal={closeModal} closeModalAndNotify={closeModalAndNotify} isEdit />
+        <OrderSidebar
+          closeModal={closeModal}
+          closeModalAndNotify={closeModalAndNotify}
+          isEdit
+        />
       </CustomModal>
-      <Modal
-        isOpen={isShowModalDelete}
-        onRequestClose={() => setIsShowModalDelete(false)}
+      <CustomModal
+        isShow={isShowModalDelete}
+        closeModal={() => setIsShowModalDelete(false)}
         shouldCloseOnOverlayClick
-        style={{
-          overlay: {
-            background: 'rgba(0,0,0,0.6)',
-            cursor: 'pointer'
-          },
-          content: {
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%,-50%)',
-            background: '#1F1D2B',
-            width: '410px',
-            border: 'none',
-            borderRadius: '1rem',
-            height: 'fit-content'
-          }
+        stylesOverlay={{
+          background: 'rgba(0,0,0,0.6)',
+          cursor: 'pointer'
+        }}
+        stylesContent={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%,-50%)',
+          background: '#1F1D2B',
+          width: '410px',
+          border: 'none',
+          borderRadius: '1rem',
+          height: 'fit-content'
         }}
       >
         <div className="bg-dark-second rounded-2xl text-white mt-4">
@@ -330,7 +321,7 @@ const Orders = () => {
             </button>
           </div>
         </div>
-      </Modal>
+      </CustomModal>
       <Toastify
         type={statusToast.type}
         message={statusToast.message}

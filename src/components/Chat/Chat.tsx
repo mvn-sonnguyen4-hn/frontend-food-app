@@ -1,5 +1,5 @@
 import { ENV } from '@app/constants/env';
-import { useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import styles from './Chat.module.scss';
 import { v4 as uuidv4 } from 'uuid';
 import { useAppSelector } from '@app/redux/store';
@@ -92,16 +92,11 @@ function Chat() {
     return result;
   };
   const messagesRef = useRef<any>();
-  // const [arrivalMessage, setArrivalMessage] = useState({
-  //   sender: '',
-  //   text: '',
-  //   createdAt: ''
-  // });
 
   useEffect(() => {
     // scroll to bottom after message changed
     socket.current = io(ENV.HOST_SOCKET, {
-      reconnectionDelayMax: 10000,
+      reconnectionDelayMax: 10000
     });
     const localId = localStorage.getItem('id') || '';
     const id = uuidv4();
@@ -128,6 +123,9 @@ function Chat() {
       setAdmin(data.data.user);
       getAllMessages();
     });
+    return () => {
+      socket.current.removeListener('getMessage');
+    };
   }, []);
   useEffect(() => {
     if (messagesRef?.current) {
@@ -205,4 +203,4 @@ function Chat() {
   );
 }
 
-export default Chat;
+export default memo(Chat);

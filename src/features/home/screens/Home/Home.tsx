@@ -125,7 +125,9 @@ function Home() {
       <div className="flex items-end justify-between flex-wrap">
         <div>
           <p className="text-3xl">Nấm Store</p>
-          <p className="mb-6 mt-1"><Moment format="ll">{new Date().toISOString()}</Moment></p>
+          <p className="mb-6 mt-1">
+            <Moment format="ll">{new Date().toISOString()}</Moment>
+          </p>
         </div>
         <form onSubmit={handleSearch}>
           <div className="bg-[#2D303E] rounded-lg border-solid border-[#393C49] border-[1px] flex items-center p-3">
@@ -163,7 +165,10 @@ function Home() {
         ref={toastRef}
       />
       <CustomModal isShow={isShow} closeModal={closeModal}>
-        <OrderSidebar closeModal={closeModal} closeModalAndNotify={closeModalAndNotify} />
+        <OrderSidebar
+          closeModal={closeModal}
+          closeModalAndNotify={closeModalAndNotify}
+        />
       </CustomModal>
       {isLoading && (
         <div className="flex justify-center">

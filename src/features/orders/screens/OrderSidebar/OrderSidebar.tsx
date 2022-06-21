@@ -22,7 +22,7 @@ import { useNavigate } from 'react-router';
 interface IPropsListOrders {
   closeModalAndNotify: Function;
   isEdit?: boolean;
-  closeModal:Function;
+  closeModal: Function;
 }
 
 function OrderSidebar({
@@ -196,9 +196,7 @@ function OrderSidebar({
         {!isEdit ? (
           <button
             className={`btn-primary w-full py-3 mt-7 flex-center outline-none border-none ${
-              listOrders.length === 0
-                ? 'opacity-50 pointer-events-none'
-                : ''
+              listOrders.length === 0 ? 'opacity-50 pointer-events-none' : ''
             }`}
             onClick={() => navigate('/checkout')}
           >
@@ -222,7 +220,7 @@ function OrderSidebar({
         <div className="flex mt-3">
           <button
             className="btn-primary-outline flex-center flex-1"
-            onClick={()=>closeModal()}
+            onClick={() => closeModal()}
           >
             Đóng
           </button>

@@ -10,6 +10,10 @@ import { useAppDispatch } from '@app/redux/store';
 import { useNavigate } from 'react-router';
 import FormInput from '@app/components/atoms/FormInput/FormInput';
 import { register } from '../../redux/auth.slice';
+import {
+  dataInputLogin,
+  dataInputRegister
+} from '../../constants/auth.validate';
 
 function LoginScreen() {
   const [isLoading, setIsLoading] = useState<Boolean>(false);
@@ -46,8 +50,68 @@ function LoginScreen() {
       }
     }
   };
-  const onFocusInput = (e: React.FocusEvent<HTMLInputElement>) => {
-    setIsErrLogin(false);
+
+  const renderInputLogin = () => {
+    const result = dataInputLogin.map(item => {
+      return (
+        <div key={item.name}>
+          <p className="text-white font-14 mb-1 text-sm mt-3">{item.label}:</p>
+          <Controller
+            defaultValue={item.value}
+            control={control}
+            name={item.name as any}
+            rules={item.rules}
+            render={({
+              field: { onChange, name, value = item.value },
+              fieldState: { error }
+            }) => {
+              return (
+                <FormInput
+                  name={name}
+                  value={value}
+                  error={error?.message}
+                  onChange={onChange}
+                  type={item.type}
+                  onFocus={() => setIsErrLogin(false)}
+                />
+              );
+            }}
+          />
+        </div>
+      );
+    });
+    return result;
+  };
+
+  const renderInputRegister = () => {
+    const result = dataInputRegister.map(item => {
+      return (
+        <div key={item.name}>
+          <p className="text-white font-14 mb-1 text-sm mt-3">{item.label}:</p>
+          <Controller
+            defaultValue={item.value}
+            control={control}
+            name={item.name as any}
+            rules={item.rules}
+            render={({
+              field: { onChange, name, value = item.value },
+              fieldState: { error }
+            }) => {
+              return (
+                <FormInput
+                  name={name}
+                  value={value}
+                  error={error?.message}
+                  onChange={onChange}
+                  type={item.type}
+                />
+              );
+            }}
+          />
+        </div>
+      );
+    });
+    return result;
   };
   return (
     <div className="bg-dark min-h-[100vh] min-w-full flex flex-col justify-center items-center">
@@ -59,168 +123,7 @@ function LoginScreen() {
           {isLogin ? 'Đăng nhập' : 'Đăng kí'}
         </p>
         <p className="my-5 bg-[#393C49] w-full h-[1px]" />
-        {!isLogin && (
-          <>
-            <div>
-              <p className="text-white font-14 mb-1 text-sm">Họ</p>
-              <Controller
-                control={control}
-                name="first_name"
-                rules={{
-                  required: 'Họ không được để trống.'
-                }}
-                render={({
-                  field: { onChange, name },
-                  fieldState: { error }
-                }) => (
-                  <FormInput
-                    name={name}
-                    error={error?.message}
-                    onChange={onChange}
-                    type="text"
-                  />
-                )}
-              />
-            </div>
-            <div className="mt-3">
-              <p className="text-white font-14 mb-1 text-sm">Tên</p>
-              <Controller
-                control={control}
-                name="last_name"
-                rules={{
-                  required: 'Tên không được để trống.'
-                }}
-                render={({
-                  field: { onChange, name },
-                  fieldState: { error }
-                }) => (
-                  <FormInput
-                    name={name}
-                    error={error?.message}
-                    onChange={onChange}
-                    type="text"
-                  />
-                )}
-              />
-            </div>
-          </>
-        )}
-        <div className="mt-3">
-          <p className="text-white font-14 mb-1 text-sm">Username</p>
-          <Controller
-            control={control}
-            name="username"
-            rules={{
-              required: 'Username không được để trống.'
-            }}
-            render={({ field: { onChange, name }, fieldState: { error } }) => (
-              <FormInput
-                name={name}
-                error={error?.message}
-                onChange={onChange}
-                onFocus={onFocusInput}
-                type="text"
-              />
-            )}
-          />
-        </div>
-        {/* check login */}
-        {!isLogin && (
-          <div className="mt-3">
-            <p className="text-white font-14 mb-1 text-sm">Email</p>
-            <Controller
-              control={control}
-              name="email"
-              rules={{
-                required: 'Tài khoản không được để trống.',
-                maxLength: {
-                  value: 100,
-                  message: 'Email không được vượt quá 100 ký tự.'
-                }
-              }}
-              render={({
-                field: { onChange, name },
-                fieldState: { error }
-              }) => (
-                <FormInput
-                  name={name}
-                  error={error?.message}
-                  onChange={onChange}
-                />
-              )}
-            />
-          </div>
-        )}
-        <div className="mt-3">
-          <p className="text-white font-14 mb-1 text-sm">Mật khẩu</p>
-          <Controller
-            control={control}
-            name="password"
-            rules={{
-              required: 'Mật khẩu không được để trống.'
-            }}
-            render={({ field: { onChange, name }, fieldState: { error } }) => (
-              <FormInput
-                name={name}
-                error={error?.message}
-                onChange={onChange}
-                onFocus={onFocusInput}
-                type="password"
-              />
-            )}
-          />
-        </div>
-
-        {/* check login */}
-        {!isLogin && (
-          <>
-            <div className="mt-3">
-              <p className="text-white font-14 mb-1 text-sm">Địa chỉ</p>
-              <Controller
-                control={control}
-                name="address"
-                rules={{
-                  required: 'Địa chỉ không được để trống.'
-                }}
-                render={({
-                  field: { onChange, name },
-                  fieldState: { error }
-                }) => (
-                  <FormInput
-                    name={name}
-                    error={error?.message}
-                    onChange={onChange}
-                    type="text"
-                  />
-                )}
-              />
-            </div>
-            <div className="mt-3">
-              <p className="text-white font-14 mb-1 text-sm">Số điện thoại</p>
-              <Controller
-                control={control}
-                name="phonenumber"
-                rules={{
-                  required: 'Số điện thoại không được để trống.',
-                  pattern: {
-                    value: /(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})\b/,
-                    message: 'Số điện thoại không hợp lệ'
-                  }
-                }}
-                render={({
-                  field: { onChange, name },
-                  fieldState: { error }
-                }) => (
-                  <FormInput
-                    name={name}
-                    error={error?.message}
-                    onChange={onChange}
-                  />
-                )}
-              />
-            </div>
-          </>
-        )}
+        {isLogin ? renderInputLogin() : renderInputRegister()}
         {isErrLogin && (
           <p className="text-xs text-red-600">Sai tài khoản hoặc mật khẩu.</p>
         )}
@@ -233,7 +136,7 @@ function LoginScreen() {
         >
           {isLoading && <LoadingSpinner size={20} />}
           <span className={isLoading ? 'ml-1' : ''}>
-            {!isLogin ? 'Sign up' : 'Sign in'}
+            {!isLogin ? 'Đăng kí' : 'Đăng nhập'}
           </span>
         </button>
         <p
@@ -253,7 +156,7 @@ function LoginScreen() {
           navigate('/');
         }}
       >
-        Home
+        Trang chủ
       </p>
     </div>
   );

@@ -1,3 +1,4 @@
+import LoadingSpinner from '@app/components/atoms/LoadingSpinner/LoadingSpinner';
 import { ENV } from '@app/constants/env';
 import { useAppSelector } from '@app/redux/store';
 import { MessageDef } from '@app/types/atom.type';
@@ -18,14 +19,13 @@ function ChatScreen() {
   const [roomIsChoose, setRoomIsChoose] = useState<RoomsResponseDef | null>(
     null
   );
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     if (user?._id) {
       getRooms(user?._id ?? '').then(data => {
         setListRooms(data.data.data);
-        setRoomIsChoose(data.data.data[0]);
-        setMessages(
-          data.data.data[0].messages.map((item: any) => item.message)
-        );
+        chooseRoom(data.data.data[0]);
+        setIsLoading(false);
       });
     }
   }, [user?._id]);
@@ -120,13 +120,9 @@ function ChatScreen() {
   const chooseRoom = (room: RoomsResponseDef) => {
     setRoomIsChoose(room);
     setMessages(room.messages.map((item: any) => item.message));
-  };
-
-  const messagesRef = useRef<any>();
-  const inputChat = useRef<any>();
-  const socket = useRef<any>();
-  useEffect(() => {
-    // scroll to bottom after message changed
+    if (socket.current) {
+      socket.current.removeListener('getMessage');
+    }
     socket.current = io(ENV.HOST_SOCKET, {
       transports: ['websocket']
     });
@@ -134,18 +130,24 @@ function ChatScreen() {
     socket.current.emit('join', localId || '');
     socket.current.emit('addUser', localId || '');
     socket.current.on('getMessage', (data: any) => {
-      setMessages(prev => [
-        ...prev,
-        {
-          from: data.from,
-          to: data.to,
-          content: data.content,
-          createdAt: data.createdAt,
-          status: data.status
-        }
-      ]);
+      if (data.room_id === room?._id) {
+        setMessages(prev => [
+          ...prev,
+          {
+            from: data.from,
+            to: data.to,
+            content: data.content,
+            createdAt: data.createdAt,
+            status: data.status
+          }
+        ]);
+      }
     });
-  }, []);
+  };
+
+  const messagesRef = useRef<any>();
+  const inputChat = useRef<any>();
+  const socket = useRef<any>();
   function autoGrow() {
     inputChat.current.style = '10px';
     inputChat.current.style.height = inputChat.current.scrollHeight + 'px';
@@ -160,7 +162,6 @@ function ChatScreen() {
         return;
       }
       const content = e.target.value.replace(/\r?\n/g, '/n');
-      console.log('content', content);
       socket.current.emit('sendMessage', {
         from: user?._id,
         to: roomIsChoose?.users.find(member => member._id !== user?._id)?._id,
@@ -191,6 +192,9 @@ function ChatScreen() {
     <section className="bg-dark min-h-[100vh] text-white px-8 flex">
       <div className={cx('rooms')}>
         <p className="text-3xl mb-6">Chat</p>
+        <div className="flex-center">
+          {isLoading && <LoadingSpinner primaryColor={true} size={40} />}
+        </div>
         {renderRooms()}
       </div>
       <div className="messages bg-dark-second flex-1">

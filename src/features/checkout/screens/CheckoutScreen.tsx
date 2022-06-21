@@ -38,33 +38,6 @@ const CheckoutScreen = () => {
     }, 0);
   }, [orders]);
 
-  const rulesInput = (item: any):any => {
-    let rules = {
-      required: item.rules.required,
-      maxLength: {
-        value: item.rules.maxLength?.value || 20,
-        message: item.rules.maxLength?.message || ''
-      },
-      minLength: {
-        value: 2,
-        message: `${item.label} không được ít hơn 3 ký tự`
-      },
-      pattern: {
-        value: item.rules.pattern?.value || null,
-        message: item.rules.pattern?.message || ''
-      }
-    };
-    if (item.rules.pattern) {
-      rules = {
-        ...rules,
-        pattern: {
-          value: item.rules.pattern?.value,
-          message: item.rules.pattern?.message || ''
-        }
-      };
-    }
-    return rules;
-  };
   const renderFieldInput = () => {
     const values = [
       user?.first_name ?? '',
@@ -73,7 +46,7 @@ const CheckoutScreen = () => {
       user?.phonenumber ?? 0
     ];
     for (let i = 0; i < dataInput.length; i++) {
-      dataInput[i].value = values[i];
+      dataInput[i].value = values[i] as any;
     }
     const result = dataInput.map(item => {
       return (
@@ -83,7 +56,7 @@ const CheckoutScreen = () => {
             defaultValue={item.value}
             control={control}
             name={item.name}
-            rules={rulesInput(item)}
+            rules={item.rules}
             render={({
               field: { onChange, name, value = item.value },
               fieldState: { error }
@@ -94,7 +67,7 @@ const CheckoutScreen = () => {
                   value={value}
                   error={error?.message}
                   onChange={onChange}
-                  type="text"
+                  type={item.type}
                 />
               );
             }}
@@ -174,7 +147,7 @@ const CheckoutScreen = () => {
         address: data.address,
         fullname: data.first_name + ' ' + data.last_name,
         phonenumber: data.phonenumber ?? 0,
-        user_id: user?._id ?? '',
+        user_id: user?._id ?? ''
       })
     );
     if (uploadOrders.fulfilled.match(result)) {

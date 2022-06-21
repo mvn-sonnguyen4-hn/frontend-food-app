@@ -35,7 +35,7 @@ const SettingsScreen = () => {
       user?.phonenumber ?? 0
     ];
     for (let i = 0; i < dataInput.length; i++) {
-      dataInput[i].value = values[i];
+      dataInput[i].value = values[i] as any;
     }
     const result = dataInput.map(item => {
       return (
