@@ -1,14 +1,15 @@
 import BlankLayout from '@app/components/layouts/BlankLayout/BlackLayout';
 import NotFound from '@app/components/layouts/NotFound/NotFound';
 import { autoLoginUser, getTokens } from '@app/features/auth/auth';
-import { useAppDispatch } from '@app/redux/store';
+import { useAppDispatch, useAppSelector } from '@app/redux/store';
 import { RouteItemDef, RouteWrapperConfigDef } from '@app/types/routes.types';
-import { ComponentType, ElementType, memo, useEffect } from 'react';
+import { ComponentType, ElementType, memo, useEffect, useMemo } from 'react';
 import { Routes as Switch, Route, Navigate } from 'react-router-dom';
 import { PRIVATE_LIST, PUBLIC_LIST } from './routes.config';
 
 const DefaultLayout = BlankLayout;
 function Routes() {
+  const user = useAppSelector(state=>state.auth.user)
   const dispatch = useAppDispatch();
   useEffect(() => {
     const { accessToken } = getTokens();
@@ -19,7 +20,9 @@ function Routes() {
       autoLoginPromise();
     }
   }, []);
-  const isAuthenticated = localStorage.getItem('auth') ? true : false;
+  const isAuthenticated  = useMemo(() => {
+    return user?._id
+  }, [user])
   const routeWrapper = (
     { id, path, layout, component }: RouteItemDef,
     { isProtectedRoute }: RouteWrapperConfigDef | undefined = {}
